@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PET — Partido Español Tradicionalista</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#07080f;font-family:'DM Sans',sans-serif}
+
+#fx{position:fixed;inset:0;z-index:999;pointer-events:none}
+
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .6s ease;
+  padding:clamp(1.5rem,4vw,4rem) clamp(2rem,8vw,10rem);
+}
+.slide.active{opacity:1;pointer-events:all}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:16px;z-index:1000;
+}
+.nbtn{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+  color:#fff;font-family:'Syne',sans-serif;font-size:.68rem;letter-spacing:.1em;
+  padding:.4em 1.3em;border-radius:99px;cursor:pointer;transition:background .2s;
+  user-select:none;
+}
+.nbtn:hover{background:rgba(255,255,255,.16)}
+#dots{display:flex;gap:8px;align-items:center}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .25s,transform .25s}
+.dot.on{background:#c60b1e;transform:scale(1.4)}
+.hint{position:fixed;bottom:26px;right:24px;font-family:'Syne',sans-serif;font-size:.56rem;color:rgba(255,255,255,.18);letter-spacing:.1em;text-transform:uppercase;z-index:1001}
+#slide-num{position:fixed;top:20px;right:26px;font-family:'Syne',sans-serif;font-size:.65rem;color:rgba(255,255,255,.2);letter-spacing:.12em;z-index:1001}
+
+/* ── SHARED COMPONENTS ── */
+.pet-label{
+  font-family:'Syne',sans-serif;font-size:clamp(.6rem,1.1vw,.75rem);
+  letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(241,191,0,.7);margin-bottom:1rem;
+}
+.slide-title{
+  font-family:'Syne',sans-serif;font-weight:900;
+  font-size:clamp(2.2rem,5.5vw,4.2rem);
+  line-height:1.0;letter-spacing:-.02em;color:#fff;
+  text-align:center;
+}
+.slide-title span{color:#c60b1e}
+.slide-title .gold{color:#f1bf00}
+.body-text{
+  font-size:clamp(.9rem,1.6vw,1.1rem);font-weight:300;line-height:1.75;
+  color:rgba(255,255,255,.65);text-align:center;max-width:720px;margin-top:1rem;
+}
+.divider{
+  width:60px;height:3px;border-radius:2px;margin:1.2rem auto;
+  background:linear-gradient(90deg,#c60b1e,#f1bf00);
+  box-shadow:0 0 14px rgba(198,11,30,.5);
+}
+.tag{
+  display:inline-block;padding:.3em 1em;border-radius:99px;
+  font-family:'Syne',sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid rgba(198,11,30,.5);color:#c60b1e;background:rgba(198,11,30,.08);
+  margin-bottom:1rem;
+}
+
+/* ── SLIDE 0 TITLE ── */
+.s0 .main-title{
+  font-family:'Syne',sans-serif;font-weight:900;
+  font-size:clamp(5rem,18vw,13rem);
+  line-height:.9;letter-spacing:-.04em;
+  background:linear-gradient(160deg,#fff 30%,rgba(255,255,255,.5));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 40px rgba(198,11,30,.6));
+  position:relative;z-index:1;
+}
+.s0 .subtitle{
+  font-family:'Syne',sans-serif;font-size:clamp(.75rem,1.5vw,1rem);
+  letter-spacing:.28em;text-transform:uppercase;
+  color:rgba(241,191,0,.75);margin-top:1.2rem;
+  position:relative;z-index:1;
+}
+.s0 .tagline{
+  font-family:'DM Sans',sans-serif;font-size:clamp(.85rem,1.6vw,1.1rem);
+  color:rgba(255,255,255,.4);font-weight:300;margin-top:.6rem;letter-spacing:.05em;
+  position:relative;z-index:1;
+}
+
+/* ── SLIDE 1 MONARQUÍA ── */
+.quote-card{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(241,191,0,.2);
+  border-left:3px solid #f1bf00;
+  border-radius:0 14px 14px 0;
+  padding:1.4rem 1.8rem;
+  max-width:680px;width:100%;margin-top:1.4rem;
+  position:relative;z-index:1;
+}
+.quote-card p{
+  font-size:clamp(.85rem,1.5vw,.98rem);font-style:italic;font-weight:300;
+  line-height:1.75;color:rgba(255,255,255,.7);
+}
+.quote-card .source{
+  font-family:'Syne',sans-serif;font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(241,191,0,.5);margin-top:.7rem;
+}
+
+/* ── SLIDE 2 EDUCACIÓN ── */
+.big-stat{
+  font-family:'Syne',sans-serif;font-weight:900;
+  font-size:clamp(5rem,16vw,11rem);line-height:1;
+  color:#c60b1e;filter:drop-shadow(0 0 30px rgba(198,11,30,.6));
+  position:relative;z-index:1;
+}
+.stat-label2{
+  font-family:'Syne',sans-serif;font-size:clamp(.7rem,1.4vw,.9rem);
+  letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);
+  margin-top:.3rem;text-align:center;position:relative;z-index:1;
+}
+.pills-row{
+  display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;
+  margin-top:1.4rem;position:relative;z-index:1;max-width:740px;
+}
+.pill-item{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:.55em 1.1em;
+  font-size:clamp(.72rem,1.2vw,.82rem);color:rgba(255,255,255,.72);
+  font-weight:400;letter-spacing:.02em;
+}
+.pill-item.red{border-color:rgba(198,11,30,.4);color:#ff6060;background:rgba(198,11,30,.07)}
+.pill-item.gold{border-color:rgba(241,191,0,.4);color:#f1bf00;background:rgba(241,191,0,.07)}
+
+/* ── SLIDE 3 SANIDAD ── */
+.icon-col{
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  position:relative;z-index:1;
+}
+.hero-icon{font-size:clamp(2.5rem,6vw,4.5rem);line-height:1;filter:drop-shadow(0 0 20px rgba(198,11,30,.5))}
+
+/* ── SLIDE 4 TRANSPORTE ── */
+.impact-num{
+  font-family:'Syne',sans-serif;font-weight:900;
+  font-size:clamp(5.5rem,18vw,12rem);line-height:.9;
+  color:#c60b1e;filter:drop-shadow(0 0 50px rgba(198,11,30,.8));
+  position:relative;z-index:1;
+}
+.impact-word{
+  font-family:'Syne',sans-serif;font-size:clamp(1.2rem,3.5vw,2.4rem);
+  letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);
+  margin-top:.3rem;position:relative;z-index:1;
+}
+.solution-box{
+  background:rgba(241,191,0,.05);border:1px solid rgba(241,191,0,.25);
+  border-radius:14px;padding:1.2rem 1.8rem;max-width:660px;width:100%;
+  margin-top:1.6rem;position:relative;z-index:1;
+}
+.solution-box p{font-size:clamp(.82rem,1.4vw,.95rem);color:rgba(255,255,255,.65);line-height:1.7;font-weight:300}
+.solution-box strong{color:#f1bf00;font-weight:600}
+
+/* ── SLIDE 5 ECONOMÍA ── */
+.medidas{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;
+  max-width:900px;width:100%;margin-top:1.2rem;position:relative;z-index:1;
+}
+.medida-card{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:1.3rem 1.1rem;text-align:left;
+  border-top:2px solid #c60b1e;
+}
+.medida-num{
+  font-family:'Syne',sans-serif;font-weight:900;font-size:1.8rem;
+  color:#c60b1e;line-height:1;margin-bottom:.5rem;
+}
+.medida-title{
+  font-family:'Syne',sans-serif;font-weight:700;
+  font-size:clamp(.75rem,1.2vw,.88rem);color:#fff;
+  letter-spacing:.04em;text-transform:uppercase;margin-bottom:.5rem;
+}
+.medida-desc{font-size:clamp(.7rem,1.1vw,.8rem);color:rgba(255,255,255,.5);line-height:1.6;font-weight:300}
+.medida-highlight{
+  display:inline-block;margin-top:.6rem;
+  font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;
+  color:#f1bf00;
+}
+
+/* ── SLIDE 6 CIERRE ── */
+.viva{
+  font-family:'Syne',sans-serif;font-weight:900;
+  font-size:clamp(2.8rem,9vw,7rem);line-height:1;
+  letter-spacing:-.02em;color:#fff;text-align:center;
+  filter:drop-shadow(0 0 50px rgba(198,11,30,.7));
+  position:relative;z-index:1;
+}
+.viva-sub{
+  font-family:'Syne',sans-serif;font-size:clamp(1rem,2.5vw,1.8rem);
+  letter-spacing:.25em;text-transform:uppercase;
+  color:rgba(241,191,0,.8);margin-top:1rem;
+  position:relative;z-index:1;
+}
+.closing-stats{
+  display:flex;gap:3rem;margin-top:2rem;position:relative;z-index:1;
+  flex-wrap:wrap;justify-content:center;
+}
+.cs-item{text-align:center}
+.cs-num{
+  font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.6rem,3.5vw,2.6rem);
+  background:linear-gradient(135deg,#c60b1e,#f1bf00);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 12px rgba(198,11,30,.5));line-height:1;
+}
+.cs-lbl{font-size:.72rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem;font-family:'Syne',sans-serif}
+</style>
+</head>
+<body>
+
+<canvas id="fx"></canvas>
+
+<div id="deck">
+
+  <!-- 0: TÍTULO -->
+  <div class="slide s0 active">
+    <div class="pet-label">Partido Español Tradicionalista</div>
+    <div class="main-title">PET</div>
+    <div class="subtitle">Gestión &middot; Sentido Común &middot; Propuestas Reales</div>
+    <div class="tagline">"Dejar España en una posición mejor que la que encontramos."</div>
+  </div>
+
+  <!-- 1: FORMA DE ESTADO -->
+  <div class="slide s1">
+    <div class="tag">Forma de Estado</div>
+    <div class="slide-title">Monarquía<br/><span>Constitucional</span></div>
+    <div class="divider"></div>
+    <div class="quote-card">
+      <p>"En 1981, cuando Tejero entró en el Congreso con las armas, fue el Rey quien esa misma noche llamó a todos los capitanes generales y paró el golpe."</p>
+      <div class="source">23-F, 1981 &mdash; La Historia habla por sí sola</div>
+    </div>
+    <div class="body-text" style="margin-top:1.2rem">La monarquía constitucional no es un símbolo vacío.<br/>Es una <strong style="color:#f1bf00;font-weight:600">garantía de estabilidad democrática</strong> que no estamos dispuestos a perder.</div>
+  </div>
+
+  <!-- 2: EDUCACIÓN -->
+  <div class="slide s2">
+    <div class="tag">Educación</div>
+    <div class="big-stat" id="stat-pct">0%</div>
+    <div class="stat-label2">de los adolescentes señala la presión académica como factor de su mala salud mental</div>
+    <div class="divider"></div>
+    <div class="pills-row">
+      <div class="pill-item gold">Evaluación mixta: exámenes + proyectos</div>
+      <div class="pill-item">Lengua &middot; Matemáticas &middot; Inglés</div>
+      <div class="pill-item gold">Educación Financiera &amp; Cívica</div>
+      <div class="pill-item">Libertad de elección desde la ESO</div>
+      <div class="pill-item red">Salud mental como prioridad</div>
+    </div>
+  </div>
+
+  <!-- 3: SANIDAD -->
+  <div class="slide s3">
+    <div class="tag">Sanidad</div>
+    <div class="slide-title">La mejor sanidad<br/>necesita los <span class="gold">mejores</span> profesionales</div>
+    <div class="divider"></div>
+    <div class="body-text">España forma médicos y enfermeros excelentes.<br/>Luego se van a Alemania o a la privada porque les pagan el doble.</div>
+    <div class="quote-card" style="margin-top:1.4rem;border-left-color:#c60b1e">
+      <p>El PET garantiza <strong style="color:#fff;font-weight:600">mejores sueldos, mejores condiciones y una carrera profesional clara</strong> en la sanidad pública. Porque sin profesionales no hay sanidad pública que valga.</p>
+    </div>
+  </div>
+
+  <!-- 4: TRANSPORTE -->
+  <div class="slide s4">
+    <div class="tag" style="border-color:rgba(198,11,30,.7);color:#ff4444;background:rgba(198,11,30,.12)">Transporte &amp; Infraestructuras</div>
+    <div class="impact-num">46</div>
+    <div class="impact-word">VIDAS &mdash; ADAMUZ, 19 ENE 2026</div>
+    <div class="body-text" style="margin-top:.8rem;font-size:clamp(.8rem,1.4vw,.95rem)">Colisión Iryo-Alvia. Rotura de riel. Inspección aprobada dos meses antes.<br/>Investigación abierta por posible fraude en fondos europeos de mantenimiento.</div>
+    <div class="solution-box">
+      <p><strong>El PET propone:</strong> Reconstrucción de los tramos críticos &mdash; corredor mediterráneo, Madrid-Andalucía, Madrid-Barcelona. Aumento del límite de velocidad de <strong>280 a 350 km/h</strong>.<br/><br/>Es más caro pagar con vidas que construir bien desde el principio.</p>
+    </div>
+  </div>
+
+  <!-- 5: ECONOMÍA -->
+  <div class="slide s5">
+    <div class="tag">Economía</div>
+    <div class="slide-title">Tres medidas.<br/><span>Un plan real.</span></div>
+    <div class="medidas">
+      <div class="medida-card">
+        <div class="medida-num">01</div>
+        <div class="medida-title">Reforma de Pensiones</div>
+        <div class="medida-desc">Incentivar la permanencia laboral voluntaria con ventajas fiscales claras para garantizar pensiones sostenibles.</div>
+        <div class="medida-highlight">Más años = menos impuestos</div>
+      </div>
+      <div class="medida-card">
+        <div class="medida-num">02</div>
+        <div class="medida-title">Inmigración Laboral Inteligente</div>
+        <div class="medida-desc">Cubrir sectores con déficit de trabajadores. Visado express para perfiles altamente cualificados.</div>
+        <div class="medida-highlight">150€ &mdash; proceso ágil</div>
+      </div>
+      <div class="medida-card">
+        <div class="medida-num">03</div>
+        <div class="medida-title">SEPE Digital</div>
+        <div class="medida-desc">Plataforma digital eficiente donde empresas y trabajadores se encuentren de verdad. Adiós a la burocracia.</div>
+        <div class="medida-highlight" style="color:#c60b1e">Predicamos con el ejemplo:<br/>-20% sueldo Presidente</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6: CIERRE -->
+  <div class="slide s6">
+    <div class="viva">¡VIVA<br/><span style="color:#c60b1e">ESPAÑA!</span></div>
+    <div class="viva-sub">El PET &mdash; Gestión que funciona</div>
+    <div class="divider" style="margin:1.4rem auto"></div>
+    <div class="closing-stats">
+      <div class="cs-item"><div class="cs-num">5</div><div class="cs-lbl">Áreas</div></div>
+      <div class="cs-item"><div class="cs-num">5</div><div class="cs-lbl">Propuestas reales</div></div>
+      <div class="cs-item"><div class="cs-num">1</div><div class="cs-lbl">Objetivo</div></div>
+    </div>
+    <div class="body-text" style="margin-top:1.4rem;font-size:clamp(.82rem,1.4vw,.95rem)">
+      "No venimos a dividir. Venimos a construir.<br/>España tiene todo lo que necesita para prosperar.<br/><strong style="color:#fff;font-weight:400">Solo hace falta gestionarlo bien.</strong>"
+    </div>
+  </div>
+
+</div><!-- end #deck -->
+
+<div id="nav">
+  <button class="nbtn" id="prev">&#8592;</button>
+  <div id="dots"></div>
+  <button class="nbtn" id="next">&#8594;</button>
+</div>
+<div id="slide-num">1 / 7</div>
+<div class="hint">&#8592; &#8594; para navegar</div>
+
+<script>
+/* ══════════════════════════════════════════
+   SLIDE MANAGER
+══════════════════════════════════════════ */
+const slides = Array.from(document.querySelectorAll('.slide'));
+const TOTAL  = slides.length;
+let cur = 0;
+
+const dotsEl  = document.getElementById('dots');
+const numEl   = document.getElementById('slide-num');
+slides.forEach((_,i)=>{
+  const d = document.createElement('div');
+  d.className = 'dot'+(i===0?' on':'');
+  d.onclick   = ()=>go(i);
+  dotsEl.appendChild(d);
+});
+const getDots = ()=>Array.from(dotsEl.children);
+
+function go(idx){
+  slides[cur].classList.remove('active');
+  getDots()[cur].classList.remove('on');
+  cur = (idx+TOTAL)%TOTAL;
+  slides[cur].classList.add('active');
+  getDots()[cur].classList.add('on');
+  numEl.textContent = (cur+1)+' / '+TOTAL;
+  INITS[cur]();
+  if(cur===2) startStatCounter();
+}
+document.getElementById('prev').onclick = ()=>go(cur-1);
+document.getElementById('next').onclick = ()=>go(cur+1);
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') go(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')    go(cur-1);
+});
+
+/* ══════════════════════════════════════════
+   CANVAS
+══════════════════════════════════════════ */
+const cv  = document.getElementById('fx');
+const ctx = cv.getContext('2d');
+let W, H;
+function resize(){ W=cv.width=window.innerWidth; H=cv.height=window.innerHeight; }
+window.addEventListener('resize', resize); resize();
+
+const RED  = '#c60b1e';
+const GOLD = '#f1bf00';
+const ORED = '#ff3300';
+const YEL  = '#ffcc00';
+
+
+/* ══════════════════════════════════════════
+   S0 — SIDE EMITTER PARTICLES + SHOOTERS
+══════════════════════════════════════════ */
+let sp=[], sTick=0, shooters=[];
+
+function makeShooter(scatter){
+  return{
+    x: scatter?Math.random()*(W+600)-300:-400,
+    y: H*.04+Math.random()*H*.92,
+    spd: Math.random()*12+5,
+    tl:  Math.random()*220+70,
+    thick: Math.random()*1.8+.3,
+    alpha: Math.random()*.18+.05,
+    col: Math.random()<.55?ORED:YEL,
+    wave:(Math.random()-.5)*.3
+  };
+}
+function stepShooter(s){ s.x+=s.spd; s.y+=s.wave; if(s.x>W+s.tl+80) Object.assign(s,makeShooter(false)); }
+function drawShooter(s){
+  const g=ctx.createLinearGradient(s.x-s.tl,s.y,s.x,s.y);
+  g.addColorStop(0,'transparent'); g.addColorStop(.6,s.col+'33'); g.addColorStop(1,s.col+'bb');
+  ctx.save(); ctx.globalAlpha=s.alpha;
+  ctx.shadowColor=s.col; ctx.shadowBlur=12;
+  ctx.strokeStyle=g; ctx.lineWidth=s.thick;
+  ctx.beginPath(); ctx.moveTo(s.x-s.tl,s.y); ctx.lineTo(s.x,s.y); ctx.stroke();
+  ctx.globalAlpha=s.alpha*2.6;
+  ctx.beginPath(); ctx.arc(s.x,s.y,s.thick*2.4,0,Math.PI*2);
+  ctx.fillStyle='#ffffffcc'; ctx.fill(); ctx.restore();
+}
+function makeSP(){
+  const left=Math.random()<.5;
+  const ang =left?(Math.random()-.5)*1.4:Math.PI+(Math.random()-.5)*1.4;
+  const spd =Math.random()*3+.9;
+  const roll=Math.random();
+  return{
+    x:left?0:W, y:H*.06+Math.random()*H*.88,
+    vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd-.5,
+    life:1, decay:1/(Math.random()*55+48),
+    r:Math.random()*2.6+.6,
+    col:roll<.4?'#ff2200':roll<.72?'#ff8800':'#ffd000'
+  };
+}
+function initS0(){ sp=[]; sTick=0; if(!shooters.length) shooters=Array.from({length:12},()=>makeShooter(true)); }
+function updateS0(){
+  if(++sTick%2===0) for(let i=0;i<5;i++) sp.push(makeSP());
+  if(sp.length>800) sp=sp.filter(p=>p.life>0);
+  shooters.forEach(stepShooter);
+  sp.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy-=.02; p.vx*=.984; p.life-=p.decay; });
+  sp=sp.filter(p=>p.life>0);
+}
+function drawS0(){
+  shooters.forEach(drawShooter);
+  sp.forEach(p=>{
+    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.95;
+    ctx.shadowColor=p.col; ctx.shadowBlur=14;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r*Math.max(.08,p.life),0,Math.PI*2);
+    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
+  });
+}
+
+
+/* ══════════════════════════════════════════
+   S1 — PULSING GOLD ORBS (MONARCHY)
+══════════════════════════════════════════ */
+let orbT=0;
+function initS1(){ orbT=0; }
+function updateS1(){ orbT++; }
+function drawS1(){
+  const t=orbT*.008;
+  const orbs=[
+    {x:W*.12,y:H*.22,r:280,col:GOLD,a:.07},
+    {x:W*.88,y:H*.78,r:220,col:GOLD,a:.055},
+    {x:W*.5, y:H*.5, r:160,col:'#ff9900',a:.04},
+  ];
+  orbs.forEach((o,i)=>{
+    const pulse=1+Math.sin(t+i*2.1)*.1;
+    const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r*pulse);
+    g.addColorStop(0,`rgba(241,191,0,${o.a})`); g.addColorStop(1,'transparent');
+    ctx.beginPath(); ctx.arc(o.x,o.y,o.r*pulse,0,Math.PI*2);
+    ctx.fillStyle=g; ctx.fill();
+  });
+  // floating gold motes
+  if(orbT%4===0) sp.push({
+    x:W*.08+Math.random()*W*.84, y:H*.9+Math.random()*H*.1,
+    vx:(Math.random()-.5)*.4, vy:-(Math.random()*1.2+.3),
+    life:1, decay:1/(Math.random()*120+80),
+    r:Math.random()*1.8+.5, col:Math.random()<.5?GOLD:'#ffe066'
+  });
+  sp.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.life-=p.decay; });
+  sp=sp.filter(p=>p.life>0);
+  sp.forEach(p=>{
+    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.7;
+    ctx.shadowColor=p.col; ctx.shadowBlur=10;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
+  });
+}
+
+
+/* ══════════════════════════════════════════
+   S2 — EDUCATION: stat counter + particles
+══════════════════════════════════════════ */
+let eduT=0;
+function initS2(){ eduT=0; sp=[]; }
+function updateS2(){
+  eduT++;
+  if(eduT%3===0) {
+    const ang=Math.random()*Math.PI*2;
+    const spd=Math.random()*2+.5;
+    sp.push({
+      x:W/2+(Math.random()-.5)*W*.6, y:H*.28,
+      vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd-1.5,
+      life:1, decay:1/(Math.random()*80+60),
+      r:Math.random()*2.2+.5,
+      col:Math.random()<.5?RED:GOLD
+    });
+  }
+  sp.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=.015; p.life-=p.decay; });
+  sp=sp.filter(p=>p.life>0);
+}
+function drawS2(){
+  // big glow behind the stat
+  const g=ctx.createRadialGradient(W/2,H*.28,0,W/2,H*.28,W*.3);
+  g.addColorStop(0,'rgba(198,11,30,.12)'); g.addColorStop(1,'transparent');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  sp.forEach(p=>{
+    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.9;
+    ctx.shadowColor=p.col; ctx.shadowBlur=12;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r*Math.max(.1,p.life),0,Math.PI*2);
+    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
+  });
+}
+
+// Animated counter for the 41% stat
+let statCurVal=0, statAnimId=null;
+function startStatCounter(){
+  const el=document.getElementById('stat-pct');
+  statCurVal=0;
+  if(statAnimId) clearInterval(statAnimId);
+  statAnimId=setInterval(()=>{
+    statCurVal=Math.min(41,statCurVal+1);
+    el.textContent=statCurVal+'%';
+    if(statCurVal>=41) clearInterval(statAnimId);
+  },38);
+}
+
+
+/* ══════════════════════════════════════════
+   S3 — SANIDAD: ECG heartbeat line
+══════════════════════════════════════════ */
+let ecgT=0, ecgPts=[];
+function initS3(){ ecgT=0; ecgPts=[]; sp=[]; }
+function ecgY(x){
+  const norm = (x%200)/200; // 0-1 cycle
+  if(norm<.35) return 0;
+  if(norm<.42) return -(norm-.35)/.07*H*.18;
+  if(norm<.46) return -H*.18+(norm-.42)/.04*H*.36;
+  if(norm<.52) return H*.18-(norm-.46)/.06*H*.18;
+  if(norm<.56) return -(norm-.52)/.04*H*.08;
+  if(norm<.60) return -H*.08+(norm-.56)/.04*H*.08;
+  return 0;
+}
+function updateS3(){
+  ecgT+=2.5;
+  // spawn small red motes
+  if(Math.floor(ecgT)%8===0){
+    sp.push({
+      x:W*.05+Math.random()*W*.9, y:H*.5+Math.random()*H*.3,
+      vx:(Math.random()-.5)*.6, vy:-(Math.random()*.8+.2),
+      life:1,decay:1/(Math.random()*90+60),
+      r:Math.random()*1.5+.3,col:RED
+    });
+  }
+  sp.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life-=p.decay;});
+  sp=sp.filter(p=>p.life>0);
+}
+function drawS3(){
+  const cy=H*.82;
+  const pw=W*.85, sx=W*.075;
+  // faint red glow along baseline
+  const bg=ctx.createLinearGradient(0,cy-60,0,cy+20);
+  bg.addColorStop(0,'rgba(198,11,30,.06)'); bg.addColorStop(1,'transparent');
+  ctx.fillStyle=bg; ctx.fillRect(0,cy-60,W,80);
+
+  // draw the scrolling ECG
+  ctx.save();
+  ctx.strokeStyle=RED; ctx.lineWidth=2.5;
+  ctx.shadowColor=RED; ctx.shadowBlur=16;
+  ctx.beginPath();
+  let started=false;
+  for(let px=0;px<pw;px+=2){
+    const t=px-ecgT;
+    const y=cy+ecgY(t);
+    const a=Math.max(0,Math.min(1,(px/pw)*3)); // fade in from left
+    if(!started){ ctx.moveTo(sx+px,y); started=true; }
+    else ctx.lineTo(sx+px,y);
+  }
+  ctx.globalAlpha=.85; ctx.stroke(); ctx.restore();
+
+  // leading dot glow
+  const ledge=pw-4;
+  const ldy=cy+ecgY(ledge-ecgT);
+  ctx.save();
+  ctx.globalAlpha=.9; ctx.fillStyle='#fff';
+  ctx.shadowColor=RED; ctx.shadowBlur=20;
+  ctx.beginPath(); ctx.arc(sx+ledge,ldy,4,0,Math.PI*2); ctx.fill(); ctx.restore();
+
+  sp.forEach(p=>{
+    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.5;
+    ctx.shadowColor=p.col; ctx.shadowBlur=8;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
+  });
+}
+
+
+/* ══════════════════════════════════════════
+   S4 — TRANSPORTE: falling debris + solution glow
+══════════════════════════════════════════ */
+let debrisT=0;
+function initS4(){ debrisT=0; sp=[]; for(let i=0;i<40;i++) sp.push(makeDeb(true)); }
+function makeDeb(scatter){
+  return{
+    x:Math.random()*W,
+    y:scatter?Math.random()*H:-10,
+    vx:(Math.random()-.5)*1.5,
+    vy:Math.random()*1.2+.4,
+    life:1, decay:1/(Math.random()*220+120),
+    r:Math.random()*2+.4,
+    col:Math.random()<.6?'#ff2200':Math.random()<.5?'#ff6600':'#888888'
+  };
+}
+function updateS4(){
+  debrisT++;
+  if(debrisT%4===0) sp.push(makeDeb(false));
+  sp.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.012;p.life-=p.decay;});
+  sp=sp.filter(p=>p.life>0&&p.y<H+10);
+}
+function drawS4(){
+  // danger glow at top
+  const dg=ctx.createRadialGradient(W/2,0,0,W/2,0,W*.6);
+  dg.addColorStop(0,'rgba(198,11,30,.13)'); dg.addColorStop(1,'transparent');
+  ctx.fillStyle=dg; ctx.fillRect(0,0,W,H);
+  // solution glow at bottom
+  const sg=ctx.createRadialGradient(W/2,H,0,W/2,H,W*.5);
+  sg.addColorStop(0,'rgba(241,191,0,.07)'); sg.addColorStop(1,'transparent');
+  ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
+  sp.forEach(p=>{
+    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.8;
+    ctx.shadowColor=p.col; ctx.shadowBlur=8;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
+  });
+}
+
+
+/* ══════════════════════════════════════════
+   S5 — ECONOMÍA: floating number particles
+══════════════════════════════════════════ */
+let ecoT=0;
+function initS5(){ ecoT=0; sp=[]; }
+function updateS5(){
+  ecoT++;
+  if(ecoT%5===0){
+    const side=Math.random()<.5;
+    sp.push({
+      x:side?W*.02:W*.98, y:H*.1+Math.random()*H*.8,
+      vx:side?(Math.random()*1.5+.3):-(Math.random()*1.5+.3),
+      vy:(Math.random()-.5)*.8,
+      life:1, decay:1/(Math.random()*100+80),
+      r:Math.random()*1.6+.4,
+      col:Math.random()<.5?RED:GOLD
+    });
+  }
+  sp.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life-=p.decay;});
+  sp=sp.filter(p=>p.life>0);
+}
+function drawS5(){
+  sp.forEach(p=>{
+    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.65;
+    ctx.shadowColor=p.col; ctx.shadowBlur=10;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
+  });
+}
+
+
+/* ══════════════════════════════════════════
+   S6 — CIERRE: Red & Yellow FIREWORKS
+══════════════════════════════════════════ */
+const FW_COLS=[RED,'#ff5500','#ff8800',GOLD,'#ffe066','#fff','#ffaa00'];
+let rockets,fwp,rTick6;
+
+function FWP(x,y,ang,spd,col){
+  return{x,y,px:x,py:y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,
+    g:.1,life:1,decay:1/(Math.random()*90+45),r:Math.random()*2.5+.7,col};
+}
+function stepFP(p){ p.px=p.x;p.py=p.y;p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.vx*=.97;p.vy*=.98;p.life-=p.decay; }
+function drawFP(p){
+  if(p.life<=0)return;
+  const a=Math.max(0,p.life);
+  ctx.save();
+  ctx.globalAlpha=a*.75;ctx.strokeStyle=p.col;ctx.lineWidth=p.r*.6;
+  ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(p.x,p.y);ctx.stroke();
+  ctx.globalAlpha=a;ctx.fillStyle=p.col;ctx.shadowColor=p.col;ctx.shadowBlur=10;
+  ctx.beginPath();ctx.arc(p.x,p.y,p.r*Math.max(.1,a),0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+function makeRocket6(){
+  return{
+    x:W*.12+Math.random()*W*.76, y:H+12,
+    vy:-(Math.random()*10+10), vx:(Math.random()-.5)*3,
+    peakY:H*.06+Math.random()*H*.35,
+    col:FW_COLS[Math.floor(Math.random()*FW_COLS.length)],
+    trail:[],burst:false,bf:0
+  };
+}
+function stepR(r){
+  if(r.burst){r.bf++;return;}
+  r.trail.push({x:r.x,y:r.y});
+  if(r.trail.length>14) r.trail.shift();
+  r.x+=r.vx;r.y+=r.vy;r.vy+=.32;
+  if(r.y<=r.peakY){
+    r.burst=true;
+    const N=80+Math.floor(Math.random()*40);
+    for(let i=0;i<N;i++){
+      const ang=(i/N)*Math.PI*2+Math.random()*.2;
+      fwp.push(FWP(r.x,r.y,ang,Math.random()*10+3,r.col));
+    }
+    for(let i=0;i<30;i++) fwp.push(FWP(r.x,r.y,Math.random()*Math.PI*2,Math.random()*3+.5,'#fff'));
+  }
+}
+function drawR(r){
+  if(r.burst)return;
+  r.trail.forEach((pt,ti)=>{
+    ctx.save();ctx.globalAlpha=(ti/r.trail.length)*.6;
+    ctx.shadowColor=r.col;ctx.shadowBlur=7;
+    ctx.beginPath();ctx.arc(pt.x,pt.y,1.5*(ti/r.trail.length)+.3,0,Math.PI*2);
+    ctx.fillStyle=r.col;ctx.fill();ctx.restore();
+  });
+  ctx.save();ctx.fillStyle='#fff';ctx.shadowColor=r.col;ctx.shadowBlur=18;
+  ctx.beginPath();ctx.arc(r.x,r.y,3.5,0,Math.PI*2);ctx.fill();ctx.restore();
+}
+function initS6(){ rockets=[makeRocket6()];fwp=[];rTick6=0; }
+function updateS6(){
+  if(++rTick6%80===40) rockets.push(makeRocket6());
+  rockets.forEach(stepR); rockets=rockets.filter(r=>!(r.burst&&r.bf>6));
+  fwp.forEach(stepFP);    fwp=fwp.filter(p=>p.life>0);
+}
+function drawS6(){ rockets.forEach(drawR); fwp.forEach(drawFP); }
+
+
+/* ══════════════════════════════════════════
+   MAIN LOOP
+══════════════════════════════════════════ */
+const INITS  =[initS0,initS1,initS2,initS3,initS4,initS5,initS6];
+const UPDATES=[updateS0,updateS1,updateS2,updateS3,updateS4,updateS5,updateS6];
+const DRAWS  =[drawS0,drawS1,drawS2,drawS3,drawS4,drawS5,drawS6];
+
+INITS[0]();
+
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  UPDATES[cur]();
+  DRAWS[cur]();
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
