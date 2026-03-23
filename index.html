@@ -17,7 +17,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
 .slide{
   position:absolute;inset:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:clamp(1rem,3vw,3rem) clamp(1.5rem,6vw,8rem);
+  padding:clamp(2rem,5vw,5rem) clamp(3rem,8vw,12rem);
   opacity:0;pointer-events:none;
   transition:opacity .5s ease;
   overflow:hidden;
@@ -27,89 +27,89 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
 .bg-ov{position:absolute;inset:0;background:rgba(4,5,14,.78);z-index:1}
 .slide>*:not(.bg-img):not(.bg-ov){position:relative;z-index:2}
 
-/* ── NAV ─ */
-#nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:900}
-.nb{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:#fff;font-family:'Syne',sans-serif;font-size:.66rem;letter-spacing:.1em;padding:.38em 1.2em;border-radius:99px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
-.nb:active{background:rgba(255,255,255,.2)}
-#dots{display:flex;gap:7px;align-items:center}
-.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);cursor:pointer;transition:background .2s,transform .2s}
-.dot.on{background:#c60b1e;transform:scale(1.5)}
-#snum{position:fixed;top:18px;right:20px;font-family:'Syne',sans-serif;font-size:.58rem;color:rgba(255,255,255,.18);letter-spacing:.12em;z-index:900}
-.hint{position:fixed;bottom:24px;right:20px;font-family:'Syne',sans-serif;font-size:.52rem;color:rgba(255,255,255,.13);letter-spacing:.08em;text-transform:uppercase;z-index:900}
+/* ── NAV ── */
+#nav{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:18px;z-index:900}
+.nb{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Syne',sans-serif;font-size:.85rem;letter-spacing:.12em;padding:.5em 1.6em;border-radius:99px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+.nb:active{background:rgba(255,255,255,.25)}
+#dots{display:flex;gap:10px;align-items:center}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.22);cursor:pointer;transition:background .2s,transform .2s}
+.dot.on{background:#c60b1e;transform:scale(1.7)}
+#snum{position:fixed;top:28px;right:30px;font-family:'Syne',sans-serif;font-size:.75rem;color:rgba(255,255,255,.22);letter-spacing:.12em;z-index:900}
+.hint{position:fixed;bottom:34px;right:30px;font-family:'Syne',sans-serif;font-size:.68rem;color:rgba(255,255,255,.18);letter-spacing:.1em;text-transform:uppercase;z-index:900}
 
 /* ── SHARED TEXT ── */
-.lbl{font-family:'Syne',sans-serif;font-size:clamp(.54rem,.85vw,.68rem);letter-spacing:.22em;text-transform:uppercase;color:rgba(241,191,0,.65);margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem}
-.hl{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.8rem,4.2vw,3.6rem);line-height:1.05;letter-spacing:-.02em;color:#fff;text-align:center}
+.lbl{font-family:'Syne',sans-serif;font-size:clamp(.7rem,1.2vw,.9rem);letter-spacing:.22em;text-transform:uppercase;color:rgba(241,191,0,.7);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.hl{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(2.4rem,5.5vw,5rem);line-height:1.08;letter-spacing:-.02em;color:#fff;text-align:center}
 .hl .r{color:#c60b1e} .hl .g{color:#f1bf00}
-.bd{font-size:clamp(.76rem,1.3vw,.95rem);font-weight:300;line-height:1.75;color:rgba(255,255,255,.55);text-align:center;max-width:660px;margin-top:.8rem}
-.div{width:50px;height:3px;border-radius:2px;background:linear-gradient(90deg,#c60b1e,#f1bf00);margin:1rem auto}
-.tag{display:inline-flex;align-items:center;gap:.35rem;padding:.24em .85em;border-radius:99px;font-family:'Syne',sans-serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(198,11,30,.45);color:#c60b1e;background:rgba(198,11,30,.07);margin-bottom:.75rem}
-.tag.gt{border-color:rgba(241,191,0,.4);color:#f1bf00;background:rgba(241,191,0,.06)}
+.bd{font-size:clamp(1rem,1.8vw,1.35rem);font-weight:300;line-height:1.75;color:rgba(255,255,255,.65);text-align:center;max-width:780px;margin-top:1.1rem}
+.div{width:70px;height:4px;border-radius:2px;background:linear-gradient(90deg,#c60b1e,#f1bf00);margin:1.4rem auto}
+.tag{display:inline-flex;align-items:center;gap:.45rem;padding:.35em 1.1em;border-radius:99px;font-family:'Syne',sans-serif;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid rgba(198,11,30,.5);color:#c60b1e;background:rgba(198,11,30,.09);margin-bottom:1rem}
+.tag.gt{border-color:rgba(241,191,0,.5);color:#f1bf00;background:rgba(241,191,0,.08)}
 
 /* ── S0 TITLE ── */
-.logo{max-height:clamp(180px,35vh,380px);max-width:clamp(280px,55vw,650px);object-fit:contain;filter:drop-shadow(0 0 35px rgba(198,11,30,.55))}
-.s0name{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(.78rem,1.7vw,1.2rem);letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-top:1.2rem;text-align:center}
-.s0tag{font-family:'Syne',sans-serif;font-size:clamp(.58rem,1vw,.72rem);letter-spacing:.16em;text-transform:uppercase;color:rgba(241,191,0,.55);margin-top:.55rem;text-align:center}
+.logo{max-height:clamp(220px,42vh,500px);max-width:clamp(350px,65vw,850px);object-fit:contain;filter:drop-shadow(0 0 45px rgba(198,11,30,.65))}
+.s0name{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1rem,2.2vw,1.6rem);letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:1.6rem;text-align:center}
+.s0tag{font-family:'Syne',sans-serif;font-size:clamp(.75rem,1.4vw,1.05rem);letter-spacing:.18em;text-transform:uppercase;color:rgba(241,191,0,.65);margin-top:.7rem;text-align:center}
 
 /* ── S1 MONARQUÍA ── */
-.two{display:flex;align-items:center;gap:clamp(1.2rem,3.5vw,3.5rem);max-width:940px;width:100%;margin-top:.8rem}
-.tcol{flex:1;text-align:left}.timg{flex:0 0 auto;width:clamp(160px,26vw,280px)}
-.timg img{width:100%;border-radius:10px;border:1px solid rgba(241,191,0,.22);filter:sepia(.12) contrast(1.06);object-fit:cover;display:block}
-.qcard{background:rgba(255,255,255,.03);border:1px solid rgba(241,191,0,.18);border-left:3px solid #f1bf00;border-radius:0 12px 12px 0;padding:1.1rem 1.4rem;max-width:600px;width:100%;margin-top:1.1rem}
-.qcard p{font-size:clamp(.74rem,1.25vw,.88rem);font-style:italic;font-weight:300;line-height:1.75;color:rgba(255,255,255,.66)}
-.qcard .src{font-family:'Syne',sans-serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(241,191,0,.4);margin-top:.5rem}
-.qcard.rc{border-left-color:#c60b1e;border-color:rgba(198,11,30,.18)}
+.two{display:flex;align-items:center;gap:clamp(2rem,5vw,5rem);max-width:1100px;width:100%;margin-top:1.2rem}
+.tcol{flex:1;text-align:left}.timg{flex:0 0 auto;width:clamp(220px,32vw,380px)}
+.timg img{width:100%;border-radius:12px;border:1px solid rgba(241,191,0,.28);filter:sepia(.12) contrast(1.06);object-fit:cover;display:block}
+.qcard{background:rgba(255,255,255,.04);border:1px solid rgba(241,191,0,.22);border-left:4px solid #f1bf00;border-radius:0 14px 14px 0;padding:1.5rem 1.8rem;max-width:700px;width:100%;margin-top:1.4rem}
+.qcard p{font-size:clamp(.9rem,1.6vw,1.15rem);font-style:italic;font-weight:300;line-height:1.8;color:rgba(255,255,255,.75)}
+.qcard .src{font-family:'Syne',sans-serif;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(241,191,0,.5);margin-top:.7rem}
+.qcard.rc{border-left-color:#c60b1e;border-color:rgba(198,11,30,.22)}
 
 /* ── S2 EDUCACIÓN PROBLEMA ── */
-.bignum{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(5rem,16vw,11.5rem);line-height:.88;color:#c60b1e;text-align:center}
-.numlbl{font-family:'Syne',sans-serif;font-size:clamp(.58rem,1vw,.74rem);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.36);margin-top:.25rem;text-align:center;max-width:420px}
+.bignum{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(7rem,20vw,16rem);line-height:.88;color:#c60b1e;text-align:center}
+.numlbl{font-family:'Syne',sans-serif;font-size:clamp(.75rem,1.4vw,1.05rem);letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:.4rem;text-align:center;max-width:520px}
 
 /* ── S3 EDUCACIÓN SOLUCIÓN ── */
-.igrid{display:grid;grid-template-columns:repeat(6,1fr);gap:.55rem;max-width:980px;width:100%;margin-top:1rem}
-.igitem{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:.75rem .55rem;text-align:center;border-bottom:2px solid rgba(241,191,0,.35)}
-.igico{font-size:clamp(1.1rem,2vw,1.5rem);display:block;margin-bottom:.3rem}
-.igtit{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(.52rem,.82vw,.64rem);color:#fff;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.18rem}
-.igdsc{font-size:clamp(.48rem,.75vw,.6rem);color:rgba(255,255,255,.45);line-height:1.45;font-weight:300}
+.igrid{display:grid;grid-template-columns:repeat(6,1fr);gap:.75rem;max-width:1150px;width:100%;margin-top:1.3rem}
+.igitem{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:1.1rem .75rem;text-align:center;border-bottom:3px solid rgba(241,191,0,.4)}
+.igico{font-size:clamp(1.5rem,2.8vw,2.2rem);display:block;margin-bottom:.45rem}
+.igtit{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(.68rem,1.1vw,.88rem);color:#fff;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+.igdsc{font-size:clamp(.62rem,1vw,.8rem);color:rgba(255,255,255,.55);line-height:1.5;font-weight:300}
 
 /* ── S5 TRANSPORTE IMPACTO ── */
-.impnum{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(6rem,20vw,14rem);line-height:.82;color:#c60b1e;text-align:center}
-.impsub{font-family:'Syne',sans-serif;font-size:clamp(.75rem,1.5vw,1rem);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.42);margin-top:.35rem;text-align:center}
-.impdet{font-size:clamp(.7rem,1.15vw,.82rem);font-weight:300;color:rgba(255,255,255,.48);text-align:center;max-width:500px;margin-top:.65rem;line-height:1.65}
+.impnum{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(8rem,25vw,20rem);line-height:.82;color:#c60b1e;text-align:center}
+.impsub{font-family:'Syne',sans-serif;font-size:clamp(.95rem,1.9vw,1.35rem);letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:.5rem;text-align:center}
+.impdet{font-size:clamp(.85rem,1.5vw,1.1rem);font-weight:300;color:rgba(255,255,255,.58);text-align:center;max-width:620px;margin-top:.85rem;line-height:1.7}
 
 /* ── S6 TRANSPORTE SOLUCIÓN ── */
-.spdbanner{display:flex;align-items:center;gap:1rem;background:rgba(255,255,255,.03);border:1px solid rgba(241,191,0,.18);border-radius:12px;padding:.85rem 1.5rem;margin-top:1.1rem}
-.sfrom{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.4rem,3vw,2.4rem);color:rgba(255,255,255,.3)}
-.sarrow{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1rem,2vw,1.6rem);color:#f1bf00}
-.sto{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.4rem,3vw,2.4rem);color:#f1bf00}
-.sunit{font-size:clamp(.56rem,.9vw,.68rem);color:rgba(255,255,255,.3);font-family:'Syne',sans-serif;letter-spacing:.1em;text-transform:uppercase;margin-left:.25rem}
-.railimg{width:clamp(160px,26vw,280px);border-radius:10px;border:1px solid rgba(198,11,30,.28);object-fit:cover;filter:contrast(1.08) saturate(.75)}
+.spdbanner{display:flex;align-items:center;gap:1.3rem;background:rgba(255,255,255,.04);border:1px solid rgba(241,191,0,.22);border-radius:14px;padding:1.1rem 2rem;margin-top:1.4rem}
+.sfrom{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.8rem,3.8vw,3.2rem);color:rgba(255,255,255,.35)}
+.sarrow{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.3rem,2.6vw,2.1rem);color:#f1bf00}
+.sto{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.8rem,3.8vw,3.2rem);color:#f1bf00}
+.sunit{font-size:clamp(.7rem,1.2vw,.9rem);color:rgba(255,255,255,.35);font-family:'Syne',sans-serif;letter-spacing:.12em;text-transform:uppercase;margin-left:.35rem}
+.railimg{width:clamp(220px,32vw,380px);border-radius:12px;border:1px solid rgba(198,11,30,.32);object-fit:cover;filter:contrast(1.08) saturate(.75)}
 
 /* ── S7 ECONOMÍA PENSIONES ── */
-.twocards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;max-width:800px;width:100%;margin-top:.9rem}
-.ecc{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:1.1rem 1rem;border-top:2px solid #c60b1e}
-.ecn{font-family:'Syne',sans-serif;font-weight:900;font-size:1.7rem;color:#c60b1e;line-height:1;margin-bottom:.3rem}
-.ect{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(.65rem,1.05vw,.78rem);color:#fff;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem}
-.ecd{font-size:clamp(.62rem,.95vw,.74rem);color:rgba(255,255,255,.44);line-height:1.6;font-weight:300}
-.ech{display:block;margin-top:.45rem;font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;color:#f1bf00}
+.twocards{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;max-width:950px;width:100%;margin-top:1.2rem}
+.ecc{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:15px;padding:1.4rem 1.2rem;border-top:3px solid #c60b1e}
+.ecn{font-family:'Syne',sans-serif;font-weight:900;font-size:2.2rem;color:#c60b1e;line-height:1;margin-bottom:.4rem}
+.ect{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(.8rem,1.3vw,1rem);color:#fff;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+.ecd{font-size:clamp(.78rem,1.25vw,1rem);color:rgba(255,255,255,.55);line-height:1.65;font-weight:300}
+.ech{display:block;margin-top:.55rem;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:#f1bf00}
 .ech.r{color:#c60b1e}
 
 /* ── S8 ECONOMÍA SEPE ── */
-.seperow{display:flex;align-items:flex-start;gap:clamp(1rem,3vw,2.5rem);max-width:880px;width:100%;margin-top:.9rem}
-.sepeimgw{flex:0 0 auto;width:clamp(160px,25vw,260px)}
-.sepeimgw img{width:100%;border-radius:11px;border:1px solid rgba(255,255,255,.1);object-fit:cover;display:block}
+.seperow{display:flex;align-items:flex-start;gap:clamp(1.5rem,4vw,3.5rem);max-width:1050px;width:100%;margin-top:1.2rem}
+.sepeimgw{flex:0 0 auto;width:clamp(220px,30vw,340px)}
+.sepeimgw img{width:100%;border-radius:13px;border:1px solid rgba(255,255,255,.14);object-fit:cover;display:block}
 .sepecontent{flex:1;text-align:left}
-.commitbox{background:rgba(198,11,30,.07);border:1px solid rgba(198,11,30,.28);border-radius:11px;padding:.9rem 1.1rem;margin-top:.9rem}
-.cline{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(.72rem,1.2vw,.85rem);color:#fff;margin-bottom:.18rem}
-.cpct{color:#c60b1e;font-size:1.05em}
+.commitbox{background:rgba(198,11,30,.09);border:1px solid rgba(198,11,30,.32);border-radius:13px;padding:1.2rem 1.4rem;margin-top:1.1rem}
+.cline{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(.88rem,1.5vw,1.1rem);color:#fff;margin-bottom:.25rem}
+.cpct{color:#c60b1e;font-size:1.1em}
 
 /* ── S9 CIERRE ── */
-.viva{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(3rem,10vw,8rem);line-height:.9;letter-spacing:-.02em;color:#fff;text-align:center}
+.viva{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(4rem,12vw,11rem);line-height:.92;letter-spacing:-.02em;color:#fff;text-align:center}
 .viva .vr{color:#c60b1e}
-.vivasub{font-family:'Syne',sans-serif;font-size:clamp(.68rem,1.7vw,1.15rem);letter-spacing:.24em;text-transform:uppercase;color:rgba(241,191,0,.75);margin-top:.8rem;text-align:center}
-.cstats{display:flex;gap:2.2rem;margin-top:1.4rem;flex-wrap:wrap;justify-content:center}
+.vivasub{font-family:'Syne',sans-serif;font-size:clamp(.88rem,2.2vw,1.5rem);letter-spacing:.26em;text-transform:uppercase;color:rgba(241,191,0,.8);margin-top:1rem;text-align:center}
+.cstats{display:flex;gap:3rem;margin-top:1.8rem;flex-wrap:wrap;justify-content:center}
 .cs{text-align:center}
-.csn{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.7rem,3.8vw,2.8rem);color:#c60b1e;line-height:1}
-.csl{font-size:.64rem;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem;font-family:'Syne',sans-serif}
+.csn{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(2.2rem,4.8vw,3.8rem);color:#c60b1e;line-height:1}
+.csl{font-size:.78rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.12em;margin-top:.3rem;font-family:'Syne',sans-serif}
 
 /* ── SPAIN FLAG SWEEP (surprise on S9) ── */
 #flagsweep{
@@ -154,7 +154,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
           <p>"En 1981, cuando Tejero entró en el Congreso con las armas, fue el Rey quien esa misma noche llamó a todos los capitanes generales y paró el golpe."</p>
           <div class="src">23-F, 1981 — La Historia habla por sí sola</div>
         </div>
-        <div class="bd" style="text-align:left;margin-top:.9rem">Una <strong style="color:#f1bf00;font-weight:600">garantía de estabilidad democrática</strong> que no estamos dispuestos a perder.</div>
+        <div class="bd" style="text-align:left;margin-top:1.1rem">Una <strong style="color:#f1bf00;font-weight:600">garantía de estabilidad democrática</strong> que no estamos dispuestos a perder.</div>
       </div>
       <div class="timg">
         <img src="23F.jfif" alt="23-F" onerror="this.parentElement.style.display='none'"/>
@@ -168,7 +168,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
     <div class="bignum" id="pct41">0%</div>
     <div class="numlbl">de los adolescentes con problemas de salud mental señala la presión académica como factor</div>
     <div class="div"></div>
-    <div class="bd" style="font-size:clamp(.8rem,1.4vw,1rem)">"Un sistema que genera ese nivel de estrés<br/><strong style="color:#fff;font-weight:400">no está educando, está dañando.</strong>"</div>
+    <div class="bd" style="font-size:clamp(1.05rem,1.9vw,1.35rem)">"Un sistema que genera ese nivel de estrés<br/><strong style="color:#fff;font-weight:400">no está educando, está dañando.</strong>"</div>
   </div>
 
   <!-- 3: EDUCACIÓN SOLUCIÓN -->
@@ -201,7 +201,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
         <div class="igtit">Libre elección</div>
         <div class="igdsc">Asignaturas optativas desde la ESO sin límites</div>
       </div>
-      <div class="igitem" style="border-bottom-color:rgba(198,11,30,.4)">
+      <div class="igitem" style="border-bottom-color:rgba(198,11,30,.5)">
         <span class="igico">🧠</span>
         <div class="igtit">Salud mental</div>
         <div class="igdsc">Bienestar del alumno como prioridad</div>
@@ -215,7 +215,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
     <div class="hl">Sin profesionales<br/>no hay <span class="r">sanidad</span> que valga</div>
     <div class="div"></div>
     <div class="bd">España forma médicos y enfermeros excelentes.<br/>Luego se van a Alemania o a la privada porque les pagan el doble.</div>
-    <div class="qcard rc" style="max-width:620px;margin-top:1.2rem">
+    <div class="qcard rc" style="max-width:720px;margin-top:1.4rem">
       <p>El PET garantiza <strong style="color:#fff;font-weight:600">mejores sueldos, mejores condiciones y una carrera profesional clara</strong> para los profesionales de la sanidad pública.<br/><br/>Porque si queremos la mejor sanidad, aquí es donde tienen que ir nuestros impuestos.</p>
     </div>
   </div>
@@ -224,10 +224,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
   <div class="slide">
     <div class="bg-img" style="background-image:url('Adamuz_ACCIDENTE.jpg')"></div>
     <div class="bg-ov"></div>
-    <div class="tag" style="border-color:rgba(198,11,30,.7);color:#ff5555;background:rgba(198,11,30,.12)">⚠️ Transporte &amp; Infraestructuras</div>
+    <div class="tag" style="border-color:rgba(198,11,30,.75);color:#ff6666;background:rgba(198,11,30,.14)">⚠️ Transporte &amp; Infraestructuras</div>
     <div class="impnum" id="ct46">0</div>
     <div class="impsub">VIDAS &mdash; ADAMUZ, CÓRDOBA &mdash; 19 ENE 2026</div>
-    <div class="impdet">Colisión Iryo-Alvia. Rotura de riel inspeccionado dos meses antes.<br/>Investigación abierta por posible <strong style="color:#ff6666">fraude en fondos europeos</strong> de mantenimiento.</div>
+    <div class="impdet">Colisión Iryo-Alvia. Rotura de riel inspeccionado dos meses antes.<br/>Investigación abierta por posible <strong style="color:#ff7777">fraude en fondos europeos</strong> de mantenimiento.</div>
   </div>
 
   <!-- 6: TRANSPORTE SOLUCIÓN -->
@@ -235,18 +235,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
     <div class="tag gt">🔧 La Solución</div>
     <div class="two">
       <div class="tcol">
-        <div class="hl" style="text-align:left;font-size:clamp(1.6rem,3.5vw,2.9rem)">Reconstruir.<br/><span class="g">No remendar.</span></div>
-        <div class="bd" style="text-align:left;margin-top:.7rem">Reconstrucción de los tramos críticos: corredor mediterráneo, Madrid-Andalucía, Madrid-Barcelona.</div>
+        <div class="hl" style="text-align:left;font-size:clamp(2rem,4.5vw,3.8rem)">Reconstruir.<br/><span class="g">No remendar.</span></div>
+        <div class="bd" style="text-align:left;margin-top:.9rem">Reconstrucción de los tramos críticos: corredor mediterráneo, Madrid-Andalucía, Madrid-Barcelona.</div>
         <div class="spdbanner">
           <div class="sfrom">280<span class="sunit">km/h</span></div>
           <div class="sarrow">→</div>
           <div class="sto">350<span class="sunit">km/h</span></div>
         </div>
-        <div class="bd" style="text-align:left;margin-top:.7rem;font-size:clamp(.7rem,1.15vw,.82rem)">"Es más caro pagar con vidas que construir bien desde el principio."</div>
+        <div class="bd" style="text-align:left;margin-top:.9rem;font-size:clamp(.9rem,1.5vw,1.1rem)">"Es más caro pagar con vidas que construir bien desde el principio."</div>
       </div>
       <div class="timg">
         <img src="SoldaduraRail.jpg" class="railimg" alt="Soldadura rail" onerror="this.parentElement.style.display='none'"/>
-        <div style="font-family:'Syne',sans-serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(198,11,30,.6);margin-top:.5rem;text-align:center">Soldadura inspeccionada · 2 meses antes</div>
+        <div style="font-family:'Syne',sans-serif;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(198,11,30,.7);margin-top:.65rem;text-align:center">Soldadura inspeccionada · 2 meses antes</div>
       </div>
     </div>
   </div>
@@ -267,7 +267,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
         <div class="ect">Inmigración Laboral Inteligente</div>
         <div class="ecd">Cubrir sectores con déficit de trabajadores. Más cotizaciones = pensiones más sostenibles.</div>
         <span class="ech">Visado express para perfiles cualificados</span>
-        <span class="ech" style="font-weight:400;color:rgba(255,255,255,.45)">150€ · plazas limitadas · proceso ágil</span>
+        <span class="ech" style="font-weight:400;color:rgba(255,255,255,.5)">150€ · plazas limitadas · proceso ágil</span>
       </div>
     </div>
   </div>
@@ -275,14 +275,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
   <!-- 8: ECONOMÍA SEPE + RECORTES -->
   <div class="slide">
     <div class="tag gt">💻 Economía — Medida 03 + Compromiso</div>
-    <div class="hl" style="font-size:clamp(1.5rem,3.2vw,2.6rem)">Modernizar el Estado.<br/><span class="g">Predicar con el ejemplo.</span></div>
+    <div class="hl" style="font-size:clamp(1.9rem,4vw,3.3rem)">Modernizar el Estado.<br/><span class="g">Predicar con el ejemplo.</span></div>
     <div class="seperow">
       <div class="sepeimgw">
         <img src="SEPE.jpg" alt="SEPE" onerror="this.parentElement.style.display='none'"/>
-        <div style="font-family:'Syne',sans-serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(241,191,0,.45);margin-top:.45rem;text-align:center">SEPE Digital</div>
+        <div style="font-family:'Syne',sans-serif;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(241,191,0,.55);margin-top:.55rem;text-align:center">SEPE Digital</div>
       </div>
       <div class="sepecontent">
-        <div class="ecc" style="margin-bottom:.8rem">
+        <div class="ecc" style="margin-bottom:1rem">
           <div class="ecn">03</div>
           <div class="ect">SEPE Digital</div>
           <div class="ecd">Convertir el servicio público de empleo en una plataforma digital eficiente donde empresas y trabajadores se encuentren de verdad. Adiós a la burocracia de siempre.</div>
@@ -291,7 +291,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
           <div class="cline">📢 Compromiso del PET</div>
           <div class="cline"><span class="cpct">−20%</span> sueldo del Presidente del Gobierno</div>
           <div class="cline"><span class="cpct">−10%</span> sueldo de ministros y altos cargos</div>
-          <div style="font-size:.68rem;color:rgba(255,255,255,.38);margin-top:.4rem;font-weight:300">Siguen siendo sueldos altos. Pero ese dinero tiene usos mejores. Nosotros predicamos con el ejemplo.</div>
+          <div style="font-size:.82rem;color:rgba(255,255,255,.45);margin-top:.5rem;font-weight:300">Siguen siendo sueldos altos. Pero ese dinero tiene usos mejores. Nosotros predicamos con el ejemplo.</div>
         </div>
       </div>
     </div>
@@ -301,13 +301,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:
   <div class="slide">
     <div class="viva">¡VIVA<br/><span class="vr">ESPAÑA!</span></div>
     <div class="vivasub">El PET &mdash; Gestión que funciona</div>
-    <div class="div" style="margin:.9rem auto"></div>
+    <div class="div" style="margin:1.1rem auto"></div>
     <div class="cstats">
       <div class="cs"><div class="csn">5</div><div class="csl">Áreas</div></div>
       <div class="cs"><div class="csn">5</div><div class="csl">Propuestas reales</div></div>
       <div class="cs"><div class="csn">1</div><div class="csl">Objetivo</div></div>
     </div>
-    <div class="bd" style="margin-top:1.1rem;font-size:clamp(.74rem,1.25vw,.88rem)">"No venimos a dividir. Venimos a construir.<br/>España tiene todo lo que necesita para prosperar.<br/><strong style="color:#fff;font-weight:400">Solo hace falta gestionarlo bien.</strong>"</div>
+    <div class="bd" style="margin-top:1.3rem;font-size:clamp(.95rem,1.6vw,1.25rem)">"No venimos a dividir. Venimos a construir.<br/>España tiene todo lo que necesita para prosperar.<br/><strong style="color:#fff;font-weight:400">Solo hace falta gestionarlo bien.</strong>"</div>
   </div>
 
 </div><!-- #deck -->
@@ -557,7 +557,7 @@ function ecgY(x){
   if(n<.45)return -H*.14+(n-.41)/.04*H*.28;
   if(n<.51)return H*.14-(n-.45)/.06*H*.14;
   if(n<.55)return -(n-.51)/.04*H*.055;
-  if(n<.59)return -H*.055+(n-.55)/.04*H*.055;
+  if(n<59)return -H*.055+(n-.55)/.04*H*.055;
   return 0;
 }
 function drawS4(){
