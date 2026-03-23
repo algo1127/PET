@@ -2,750 +2,790 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
 <title>PET — Partido Español Tradicionalista</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;900&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;background:#07080f;font-family:'DM Sans',sans-serif}
+html,body{width:100%;height:100%;overflow:hidden;background:#060810;font-family:'DM Sans',sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
 
-#fx{position:fixed;inset:0;z-index:999;pointer-events:none}
+/* ── CANVAS ── */
+#fx{position:fixed;inset:0;z-index:500;pointer-events:none;display:block}
 
+/* ── SLIDES ── */
+#deck{position:fixed;inset:0;z-index:1}
 .slide{
   position:absolute;inset:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .6s ease;
-  padding:clamp(1.5rem,4vw,4rem) clamp(2rem,8vw,10rem);
+  padding:clamp(1rem,3vw,3rem) clamp(1.5rem,6vw,8rem);
+  opacity:0;pointer-events:none;
+  transition:opacity .5s ease;
+  overflow:hidden;
 }
 .slide.active{opacity:1;pointer-events:all}
+.bg-img{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0}
+.bg-ov{position:absolute;inset:0;background:rgba(4,5,14,.78);z-index:1}
+.slide>*:not(.bg-img):not(.bg-ov){position:relative;z-index:2}
 
 /* ── NAV ── */
-#nav{
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  display:flex;align-items:center;gap:16px;z-index:1000;
-}
-.nbtn{
-  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
-  color:#fff;font-family:'Syne',sans-serif;font-size:.68rem;letter-spacing:.1em;
-  padding:.4em 1.3em;border-radius:99px;cursor:pointer;transition:background .2s;
-  user-select:none;
-}
-.nbtn:hover{background:rgba(255,255,255,.16)}
-#dots{display:flex;gap:8px;align-items:center}
-.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .25s,transform .25s}
-.dot.on{background:#c60b1e;transform:scale(1.4)}
-.hint{position:fixed;bottom:26px;right:24px;font-family:'Syne',sans-serif;font-size:.56rem;color:rgba(255,255,255,.18);letter-spacing:.1em;text-transform:uppercase;z-index:1001}
-#slide-num{position:fixed;top:20px;right:26px;font-family:'Syne',sans-serif;font-size:.65rem;color:rgba(255,255,255,.2);letter-spacing:.12em;z-index:1001}
+#nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;z-index:900}
+.nb{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:#fff;font-family:'Syne',sans-serif;font-size:.66rem;letter-spacing:.1em;padding:.38em 1.2em;border-radius:99px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+.nb:active{background:rgba(255,255,255,.2)}
+#dots{display:flex;gap:7px;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);cursor:pointer;transition:background .2s,transform .2s}
+.dot.on{background:#c60b1e;transform:scale(1.5)}
+#snum{position:fixed;top:18px;right:20px;font-family:'Syne',sans-serif;font-size:.58rem;color:rgba(255,255,255,.18);letter-spacing:.12em;z-index:900}
+.hint{position:fixed;bottom:24px;right:20px;font-family:'Syne',sans-serif;font-size:.52rem;color:rgba(255,255,255,.13);letter-spacing:.08em;text-transform:uppercase;z-index:900}
 
-/* ── SHARED COMPONENTS ── */
-.pet-label{
-  font-family:'Syne',sans-serif;font-size:clamp(.6rem,1.1vw,.75rem);
-  letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(241,191,0,.7);margin-bottom:1rem;
-}
-.slide-title{
-  font-family:'Syne',sans-serif;font-weight:900;
-  font-size:clamp(2.2rem,5.5vw,4.2rem);
-  line-height:1.0;letter-spacing:-.02em;color:#fff;
-  text-align:center;
-}
-.slide-title span{color:#c60b1e}
-.slide-title .gold{color:#f1bf00}
-.body-text{
-  font-size:clamp(.9rem,1.6vw,1.1rem);font-weight:300;line-height:1.75;
-  color:rgba(255,255,255,.65);text-align:center;max-width:720px;margin-top:1rem;
-}
-.divider{
-  width:60px;height:3px;border-radius:2px;margin:1.2rem auto;
-  background:linear-gradient(90deg,#c60b1e,#f1bf00);
-  box-shadow:0 0 14px rgba(198,11,30,.5);
-}
-.tag{
-  display:inline-block;padding:.3em 1em;border-radius:99px;
-  font-family:'Syne',sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
-  border:1px solid rgba(198,11,30,.5);color:#c60b1e;background:rgba(198,11,30,.08);
-  margin-bottom:1rem;
-}
+/* ── SHARED TEXT ── */
+.lbl{font-family:'Syne',sans-serif;font-size:clamp(.54rem,.85vw,.68rem);letter-spacing:.22em;text-transform:uppercase;color:rgba(241,191,0,.65);margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem}
+.hl{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.8rem,4.2vw,3.6rem);line-height:1.05;letter-spacing:-.02em;color:#fff;text-align:center}
+.hl .r{color:#c60b1e} .hl .g{color:#f1bf00}
+.bd{font-size:clamp(.76rem,1.3vw,.95rem);font-weight:300;line-height:1.75;color:rgba(255,255,255,.55);text-align:center;max-width:660px;margin-top:.8rem}
+.div{width:50px;height:3px;border-radius:2px;background:linear-gradient(90deg,#c60b1e,#f1bf00);margin:1rem auto}
+.tag{display:inline-flex;align-items:center;gap:.35rem;padding:.24em .85em;border-radius:99px;font-family:'Syne',sans-serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(198,11,30,.45);color:#c60b1e;background:rgba(198,11,30,.07);margin-bottom:.75rem}
+.tag.gt{border-color:rgba(241,191,0,.4);color:#f1bf00;background:rgba(241,191,0,.06)}
 
-/* ── SLIDE 0 TITLE ── */
-.s0 .main-title{
-  font-family:'Syne',sans-serif;font-weight:900;
-  font-size:clamp(5rem,18vw,13rem);
-  line-height:.9;letter-spacing:-.04em;
-  background:linear-gradient(160deg,#fff 30%,rgba(255,255,255,.5));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 40px rgba(198,11,30,.6));
-  position:relative;z-index:1;
-}
-.s0 .subtitle{
-  font-family:'Syne',sans-serif;font-size:clamp(.75rem,1.5vw,1rem);
-  letter-spacing:.28em;text-transform:uppercase;
-  color:rgba(241,191,0,.75);margin-top:1.2rem;
-  position:relative;z-index:1;
-}
-.s0 .tagline{
-  font-family:'DM Sans',sans-serif;font-size:clamp(.85rem,1.6vw,1.1rem);
-  color:rgba(255,255,255,.4);font-weight:300;margin-top:.6rem;letter-spacing:.05em;
-  position:relative;z-index:1;
-}
+/* ── S0 TITLE ── */
+.logo{max-height:clamp(100px,20vh,200px);max-width:clamp(180px,38vw,400px);object-fit:contain;filter:drop-shadow(0 0 24px rgba(198,11,30,.45))}
+.s0name{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(.78rem,1.7vw,1.2rem);letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.62);margin-top:.9rem;text-align:center}
+.s0tag{font-family:'Syne',sans-serif;font-size:clamp(.58rem,1vw,.72rem);letter-spacing:.16em;text-transform:uppercase;color:rgba(241,191,0,.55);margin-top:.45rem;text-align:center}
 
-/* ── SLIDE 1 MONARQUÍA ── */
-.quote-card{
-  background:rgba(255,255,255,.03);
-  border:1px solid rgba(241,191,0,.2);
-  border-left:3px solid #f1bf00;
-  border-radius:0 14px 14px 0;
-  padding:1.4rem 1.8rem;
-  max-width:680px;width:100%;margin-top:1.4rem;
-  position:relative;z-index:1;
-}
-.quote-card p{
-  font-size:clamp(.85rem,1.5vw,.98rem);font-style:italic;font-weight:300;
-  line-height:1.75;color:rgba(255,255,255,.7);
-}
-.quote-card .source{
-  font-family:'Syne',sans-serif;font-size:.68rem;letter-spacing:.1em;
-  text-transform:uppercase;color:rgba(241,191,0,.5);margin-top:.7rem;
-}
+/* ── S1 MONARQUÍA ── */
+.two{display:flex;align-items:center;gap:clamp(1.2rem,3.5vw,3.5rem);max-width:940px;width:100%;margin-top:.8rem}
+.tcol{flex:1;text-align:left}.timg{flex:0 0 auto;width:clamp(160px,26vw,280px)}
+.timg img{width:100%;border-radius:10px;border:1px solid rgba(241,191,0,.22);filter:sepia(.12) contrast(1.06);object-fit:cover;display:block}
+.qcard{background:rgba(255,255,255,.03);border:1px solid rgba(241,191,0,.18);border-left:3px solid #f1bf00;border-radius:0 12px 12px 0;padding:1.1rem 1.4rem;max-width:600px;width:100%;margin-top:1.1rem}
+.qcard p{font-size:clamp(.74rem,1.25vw,.88rem);font-style:italic;font-weight:300;line-height:1.75;color:rgba(255,255,255,.66)}
+.qcard .src{font-family:'Syne',sans-serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(241,191,0,.4);margin-top:.5rem}
+.qcard.rc{border-left-color:#c60b1e;border-color:rgba(198,11,30,.18)}
 
-/* ── SLIDE 2 EDUCACIÓN ── */
-.big-stat{
-  font-family:'Syne',sans-serif;font-weight:900;
-  font-size:clamp(5rem,16vw,11rem);line-height:1;
-  color:#c60b1e;filter:drop-shadow(0 0 30px rgba(198,11,30,.6));
-  position:relative;z-index:1;
-}
-.stat-label2{
-  font-family:'Syne',sans-serif;font-size:clamp(.7rem,1.4vw,.9rem);
-  letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);
-  margin-top:.3rem;text-align:center;position:relative;z-index:1;
-}
-.pills-row{
-  display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;
-  margin-top:1.4rem;position:relative;z-index:1;max-width:740px;
-}
-.pill-item{
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
-  border-radius:10px;padding:.55em 1.1em;
-  font-size:clamp(.72rem,1.2vw,.82rem);color:rgba(255,255,255,.72);
-  font-weight:400;letter-spacing:.02em;
-}
-.pill-item.red{border-color:rgba(198,11,30,.4);color:#ff6060;background:rgba(198,11,30,.07)}
-.pill-item.gold{border-color:rgba(241,191,0,.4);color:#f1bf00;background:rgba(241,191,0,.07)}
+/* ── S2 EDUCACIÓN PROBLEMA ── */
+.bignum{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(5rem,16vw,11.5rem);line-height:.88;color:#c60b1e;text-align:center}
+.numlbl{font-family:'Syne',sans-serif;font-size:clamp(.58rem,1vw,.74rem);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.36);margin-top:.25rem;text-align:center;max-width:420px}
 
-/* ── SLIDE 3 SANIDAD ── */
-.icon-col{
-  display:flex;flex-direction:column;align-items:center;gap:.5rem;
-  position:relative;z-index:1;
-}
-.hero-icon{font-size:clamp(2.5rem,6vw,4.5rem);line-height:1;filter:drop-shadow(0 0 20px rgba(198,11,30,.5))}
+/* ── S3 EDUCACIÓN SOLUCIÓN ── */
+.igrid{display:grid;grid-template-columns:repeat(5,1fr);gap:.65rem;max-width:840px;width:100%;margin-top:1rem}
+.igitem{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:.85rem .65rem;text-align:center;border-bottom:2px solid rgba(241,191,0,.35)}
+.igico{font-size:clamp(1.2rem,2.2vw,1.7rem);display:block;margin-bottom:.35rem}
+.igtit{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(.56rem,.88vw,.68rem);color:#fff;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.2rem}
+.igdsc{font-size:clamp(.54rem,.82vw,.66rem);color:rgba(255,255,255,.4);line-height:1.5;font-weight:300}
 
-/* ── SLIDE 4 TRANSPORTE ── */
-.impact-num{
-  font-family:'Syne',sans-serif;font-weight:900;
-  font-size:clamp(5.5rem,18vw,12rem);line-height:.9;
-  color:#c60b1e;filter:drop-shadow(0 0 50px rgba(198,11,30,.8));
-  position:relative;z-index:1;
-}
-.impact-word{
-  font-family:'Syne',sans-serif;font-size:clamp(1.2rem,3.5vw,2.4rem);
-  letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);
-  margin-top:.3rem;position:relative;z-index:1;
-}
-.solution-box{
-  background:rgba(241,191,0,.05);border:1px solid rgba(241,191,0,.25);
-  border-radius:14px;padding:1.2rem 1.8rem;max-width:660px;width:100%;
-  margin-top:1.6rem;position:relative;z-index:1;
-}
-.solution-box p{font-size:clamp(.82rem,1.4vw,.95rem);color:rgba(255,255,255,.65);line-height:1.7;font-weight:300}
-.solution-box strong{color:#f1bf00;font-weight:600}
+/* ── S5 TRANSPORTE IMPACTO ── */
+.impnum{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(6rem,20vw,14rem);line-height:.82;color:#c60b1e;text-align:center}
+.impsub{font-family:'Syne',sans-serif;font-size:clamp(.75rem,1.5vw,1rem);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.42);margin-top:.35rem;text-align:center}
+.impdet{font-size:clamp(.7rem,1.15vw,.82rem);font-weight:300;color:rgba(255,255,255,.48);text-align:center;max-width:500px;margin-top:.65rem;line-height:1.65}
 
-/* ── SLIDE 5 ECONOMÍA ── */
-.medidas{
-  display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;
-  max-width:900px;width:100%;margin-top:1.2rem;position:relative;z-index:1;
-}
-.medida-card{
-  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;padding:1.3rem 1.1rem;text-align:left;
-  border-top:2px solid #c60b1e;
-}
-.medida-num{
-  font-family:'Syne',sans-serif;font-weight:900;font-size:1.8rem;
-  color:#c60b1e;line-height:1;margin-bottom:.5rem;
-}
-.medida-title{
-  font-family:'Syne',sans-serif;font-weight:700;
-  font-size:clamp(.75rem,1.2vw,.88rem);color:#fff;
-  letter-spacing:.04em;text-transform:uppercase;margin-bottom:.5rem;
-}
-.medida-desc{font-size:clamp(.7rem,1.1vw,.8rem);color:rgba(255,255,255,.5);line-height:1.6;font-weight:300}
-.medida-highlight{
-  display:inline-block;margin-top:.6rem;
-  font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;
-  color:#f1bf00;
-}
+/* ── S6 TRANSPORTE SOLUCIÓN ── */
+.spdbanner{display:flex;align-items:center;gap:1rem;background:rgba(255,255,255,.03);border:1px solid rgba(241,191,0,.18);border-radius:12px;padding:.85rem 1.5rem;margin-top:1.1rem}
+.sfrom{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.4rem,3vw,2.4rem);color:rgba(255,255,255,.3)}
+.sarrow{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1rem,2vw,1.6rem);color:#f1bf00}
+.sto{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.4rem,3vw,2.4rem);color:#f1bf00}
+.sunit{font-size:clamp(.56rem,.9vw,.68rem);color:rgba(255,255,255,.3);font-family:'Syne',sans-serif;letter-spacing:.1em;text-transform:uppercase;margin-left:.25rem}
+.railimg{width:clamp(160px,26vw,280px);border-radius:10px;border:1px solid rgba(198,11,30,.28);object-fit:cover;filter:contrast(1.08) saturate(.75)}
 
-/* ── SLIDE 6 CIERRE ── */
-.viva{
-  font-family:'Syne',sans-serif;font-weight:900;
-  font-size:clamp(2.8rem,9vw,7rem);line-height:1;
-  letter-spacing:-.02em;color:#fff;text-align:center;
-  filter:drop-shadow(0 0 50px rgba(198,11,30,.7));
-  position:relative;z-index:1;
+/* ── S7 ECONOMÍA PENSIONES ── */
+.twocards{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;max-width:800px;width:100%;margin-top:.9rem}
+.ecc{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:1.1rem 1rem;border-top:2px solid #c60b1e}
+.ecn{font-family:'Syne',sans-serif;font-weight:900;font-size:1.7rem;color:#c60b1e;line-height:1;margin-bottom:.3rem}
+.ect{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(.65rem,1.05vw,.78rem);color:#fff;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem}
+.ecd{font-size:clamp(.62rem,.95vw,.74rem);color:rgba(255,255,255,.44);line-height:1.6;font-weight:300}
+.ech{display:block;margin-top:.45rem;font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;color:#f1bf00}
+.ech.r{color:#c60b1e}
+
+/* ── S8 ECONOMÍA SEPE ── */
+.seperow{display:flex;align-items:flex-start;gap:clamp(1rem,3vw,2.5rem);max-width:880px;width:100%;margin-top:.9rem}
+.sepeimgw{flex:0 0 auto;width:clamp(160px,25vw,260px)}
+.sepeimgw img{width:100%;border-radius:11px;border:1px solid rgba(255,255,255,.1);object-fit:cover;display:block}
+.sepecontent{flex:1;text-align:left}
+.commitbox{background:rgba(198,11,30,.07);border:1px solid rgba(198,11,30,.28);border-radius:11px;padding:.9rem 1.1rem;margin-top:.9rem}
+.cline{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(.72rem,1.2vw,.85rem);color:#fff;margin-bottom:.18rem}
+.cpct{color:#c60b1e;font-size:1.05em}
+
+/* ── S9 CIERRE ── */
+.viva{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(3rem,10vw,8rem);line-height:.9;letter-spacing:-.02em;color:#fff;text-align:center}
+.viva .vr{color:#c60b1e}
+.vivasub{font-family:'Syne',sans-serif;font-size:clamp(.68rem,1.7vw,1.15rem);letter-spacing:.24em;text-transform:uppercase;color:rgba(241,191,0,.75);margin-top:.8rem;text-align:center}
+.cstats{display:flex;gap:2.2rem;margin-top:1.4rem;flex-wrap:wrap;justify-content:center}
+.cs{text-align:center}
+.csn{font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.7rem,3.8vw,2.8rem);color:#c60b1e;line-height:1}
+.csl{font-size:.64rem;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem;font-family:'Syne',sans-serif}
+
+/* ── SPAIN FLAG SWEEP (surprise on S9) ── */
+#flagsweep{
+  position:fixed;inset:0;z-index:800;pointer-events:none;
+  background:linear-gradient(90deg,#c60b1e 33.33%,#f1bf00 33.33% 66.66%,#c60b1e 66.66%);
+  opacity:0;transform:translateX(-110%);
+  transition:none;
 }
-.viva-sub{
-  font-family:'Syne',sans-serif;font-size:clamp(1rem,2.5vw,1.8rem);
-  letter-spacing:.25em;text-transform:uppercase;
-  color:rgba(241,191,0,.8);margin-top:1rem;
-  position:relative;z-index:1;
+#flagsweep.go{
+  animation:fsweep 1.2s cubic-bezier(.7,0,.3,1) forwards;
 }
-.closing-stats{
-  display:flex;gap:3rem;margin-top:2rem;position:relative;z-index:1;
-  flex-wrap:wrap;justify-content:center;
+@keyframes fsweep{
+  0%  {transform:translateX(-110%);opacity:0}
+  8%  {opacity:.5}
+  50% {transform:translateX(0%);opacity:.45}
+  92% {opacity:.4}
+  100%{transform:translateX(110%);opacity:0}
 }
-.cs-item{text-align:center}
-.cs-num{
-  font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(1.6rem,3.5vw,2.6rem);
-  background:linear-gradient(135deg,#c60b1e,#f1bf00);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 12px rgba(198,11,30,.5));line-height:1;
-}
-.cs-lbl{font-size:.72rem;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem;font-family:'Syne',sans-serif}
 </style>
 </head>
 <body>
 
 <canvas id="fx"></canvas>
+<div id="flagsweep"></div>
 
 <div id="deck">
 
   <!-- 0: TÍTULO -->
-  <div class="slide s0 active">
-    <div class="pet-label">Partido Español Tradicionalista</div>
-    <div class="main-title">PET</div>
-    <div class="subtitle">Gestión &middot; Sentido Común &middot; Propuestas Reales</div>
-    <div class="tagline">"Dejar España en una posición mejor que la que encontramos."</div>
+  <div class="slide active">
+    <img src="PET.png" class="logo" alt="PET" onerror="this.style.display='none';document.getElementById('pettxt').style.display='block'"/>
+    <div id="pettxt" style="display:none;font-family:'Syne',sans-serif;font-weight:900;font-size:clamp(5rem,16vw,11rem);line-height:1;letter-spacing:-.04em">PET</div>
+    <div class="s0name">Partido Español Tradicionalista</div>
+    <div class="s0tag">Gestión &middot; Sentido Común &middot; Propuestas Reales</div>
   </div>
 
-  <!-- 1: FORMA DE ESTADO -->
-  <div class="slide s1">
-    <div class="tag">Forma de Estado</div>
-    <div class="slide-title">Monarquía<br/><span>Constitucional</span></div>
-    <div class="divider"></div>
-    <div class="quote-card">
-      <p>"En 1981, cuando Tejero entró en el Congreso con las armas, fue el Rey quien esa misma noche llamó a todos los capitanes generales y paró el golpe."</p>
-      <div class="source">23-F, 1981 &mdash; La Historia habla por sí sola</div>
-    </div>
-    <div class="body-text" style="margin-top:1.2rem">La monarquía constitucional no es un símbolo vacío.<br/>Es una <strong style="color:#f1bf00;font-weight:600">garantía de estabilidad democrática</strong> que no estamos dispuestos a perder.</div>
-  </div>
-
-  <!-- 2: EDUCACIÓN -->
-  <div class="slide s2">
-    <div class="tag">Educación</div>
-    <div class="big-stat" id="stat-pct">0%</div>
-    <div class="stat-label2">de los adolescentes señala la presión académica como factor de su mala salud mental</div>
-    <div class="divider"></div>
-    <div class="pills-row">
-      <div class="pill-item gold">Evaluación mixta: exámenes + proyectos</div>
-      <div class="pill-item">Lengua &middot; Matemáticas &middot; Inglés</div>
-      <div class="pill-item gold">Educación Financiera &amp; Cívica</div>
-      <div class="pill-item">Libertad de elección desde la ESO</div>
-      <div class="pill-item red">Salud mental como prioridad</div>
-    </div>
-  </div>
-
-  <!-- 3: SANIDAD -->
-  <div class="slide s3">
-    <div class="tag">Sanidad</div>
-    <div class="slide-title">La mejor sanidad<br/>necesita los <span class="gold">mejores</span> profesionales</div>
-    <div class="divider"></div>
-    <div class="body-text">España forma médicos y enfermeros excelentes.<br/>Luego se van a Alemania o a la privada porque les pagan el doble.</div>
-    <div class="quote-card" style="margin-top:1.4rem;border-left-color:#c60b1e">
-      <p>El PET garantiza <strong style="color:#fff;font-weight:600">mejores sueldos, mejores condiciones y una carrera profesional clara</strong> en la sanidad pública. Porque sin profesionales no hay sanidad pública que valga.</p>
-    </div>
-  </div>
-
-  <!-- 4: TRANSPORTE -->
-  <div class="slide s4">
-    <div class="tag" style="border-color:rgba(198,11,30,.7);color:#ff4444;background:rgba(198,11,30,.12)">Transporte &amp; Infraestructuras</div>
-    <div class="impact-num">46</div>
-    <div class="impact-word">VIDAS &mdash; ADAMUZ, 19 ENE 2026</div>
-    <div class="body-text" style="margin-top:.8rem;font-size:clamp(.8rem,1.4vw,.95rem)">Colisión Iryo-Alvia. Rotura de riel. Inspección aprobada dos meses antes.<br/>Investigación abierta por posible fraude en fondos europeos de mantenimiento.</div>
-    <div class="solution-box">
-      <p><strong>El PET propone:</strong> Reconstrucción de los tramos críticos &mdash; corredor mediterráneo, Madrid-Andalucía, Madrid-Barcelona. Aumento del límite de velocidad de <strong>280 a 350 km/h</strong>.<br/><br/>Es más caro pagar con vidas que construir bien desde el principio.</p>
-    </div>
-  </div>
-
-  <!-- 5: ECONOMÍA -->
-  <div class="slide s5">
-    <div class="tag">Economía</div>
-    <div class="slide-title">Tres medidas.<br/><span>Un plan real.</span></div>
-    <div class="medidas">
-      <div class="medida-card">
-        <div class="medida-num">01</div>
-        <div class="medida-title">Reforma de Pensiones</div>
-        <div class="medida-desc">Incentivar la permanencia laboral voluntaria con ventajas fiscales claras para garantizar pensiones sostenibles.</div>
-        <div class="medida-highlight">Más años = menos impuestos</div>
+  <!-- 1: MONARQUÍA -->
+  <div class="slide">
+    <div class="tag gt">👑 Forma de Estado</div>
+    <div class="hl">Monarquía<br/><span class="r">Constitucional</span></div>
+    <div class="two">
+      <div class="tcol">
+        <div class="qcard">
+          <p>"En 1981, cuando Tejero entró en el Congreso con las armas, fue el Rey quien esa misma noche llamó a todos los capitanes generales y paró el golpe."</p>
+          <div class="src">23-F, 1981 — La Historia habla por sí sola</div>
+        </div>
+        <div class="bd" style="text-align:left;margin-top:.9rem">Una <strong style="color:#f1bf00;font-weight:600">garantía de estabilidad democrática</strong> que no estamos dispuestos a perder.</div>
       </div>
-      <div class="medida-card">
-        <div class="medida-num">02</div>
-        <div class="medida-title">Inmigración Laboral Inteligente</div>
-        <div class="medida-desc">Cubrir sectores con déficit de trabajadores. Visado express para perfiles altamente cualificados.</div>
-        <div class="medida-highlight">150€ &mdash; proceso ágil</div>
-      </div>
-      <div class="medida-card">
-        <div class="medida-num">03</div>
-        <div class="medida-title">SEPE Digital</div>
-        <div class="medida-desc">Plataforma digital eficiente donde empresas y trabajadores se encuentren de verdad. Adiós a la burocracia.</div>
-        <div class="medida-highlight" style="color:#c60b1e">Predicamos con el ejemplo:<br/>-20% sueldo Presidente</div>
+      <div class="timg">
+        <img src="23F.jfif" alt="23-F" onerror="this.parentElement.style.display='none'"/>
       </div>
     </div>
   </div>
 
-  <!-- 6: CIERRE -->
-  <div class="slide s6">
-    <div class="viva">¡VIVA<br/><span style="color:#c60b1e">ESPAÑA!</span></div>
-    <div class="viva-sub">El PET &mdash; Gestión que funciona</div>
-    <div class="divider" style="margin:1.4rem auto"></div>
-    <div class="closing-stats">
-      <div class="cs-item"><div class="cs-num">5</div><div class="cs-lbl">Áreas</div></div>
-      <div class="cs-item"><div class="cs-num">5</div><div class="cs-lbl">Propuestas reales</div></div>
-      <div class="cs-item"><div class="cs-num">1</div><div class="cs-lbl">Objetivo</div></div>
-    </div>
-    <div class="body-text" style="margin-top:1.4rem;font-size:clamp(.82rem,1.4vw,.95rem)">
-      "No venimos a dividir. Venimos a construir.<br/>España tiene todo lo que necesita para prosperar.<br/><strong style="color:#fff;font-weight:400">Solo hace falta gestionarlo bien.</strong>"
+  <!-- 2: EDUCACIÓN PROBLEMA -->
+  <div class="slide">
+    <div class="tag">📚 Educación</div>
+    <div class="bignum" id="pct41">0%</div>
+    <div class="numlbl">de los adolescentes con problemas de salud mental señala la presión académica como factor</div>
+    <div class="div"></div>
+    <div class="bd" style="font-size:clamp(.8rem,1.4vw,1rem)">"Un sistema que genera ese nivel de estrés<br/><strong style="color:#fff;font-weight:400">no está educando, está dañando.</strong>"</div>
+  </div>
+
+  <!-- 3: EDUCACIÓN SOLUCIÓN -->
+  <div class="slide">
+    <div class="tag gt">✅ La Reforma Educativa</div>
+    <div class="hl">Un sistema que<br/><span class="g">prepara para la vida</span></div>
+    <div class="igrid">
+      <div class="igitem">
+        <span class="igico">📝</span>
+        <div class="igtit">Evaluación mixta</div>
+        <div class="igdsc">Exámenes + proyectos + práctica real</div>
+      </div>
+      <div class="igitem">
+        <span class="igico">🔢</span>
+        <div class="igtit">Núcleo sólido</div>
+        <div class="igdsc">Lengua, Mates, Inglés, Física, Química</div>
+      </div>
+      <div class="igitem">
+        <span class="igico">💶</span>
+        <div class="igtit">Educación financiera</div>
+        <div class="igdsc">Declaración de la renta, derechos, finanzas</div>
+      </div>
+      <div class="igitem">
+        <span class="igico">🎯</span>
+        <div class="igtit">Libre elección</div>
+        <div class="igdsc">Asignaturas optativas desde la ESO sin límites</div>
+      </div>
+      <div class="igitem" style="border-bottom-color:rgba(198,11,30,.4)">
+        <span class="igico">🧠</span>
+        <div class="igtit">Salud mental</div>
+        <div class="igdsc">Bienestar del alumno como prioridad</div>
+      </div>
     </div>
   </div>
 
-</div><!-- end #deck -->
+  <!-- 4: SANIDAD -->
+  <div class="slide">
+    <div class="tag">🏥 Sanidad Pública</div>
+    <div class="hl">Sin profesionales<br/>no hay <span class="r">sanidad</span> que valga</div>
+    <div class="div"></div>
+    <div class="bd">España forma médicos y enfermeros excelentes.<br/>Luego se van a Alemania o a la privada porque les pagan el doble.</div>
+    <div class="qcard rc" style="max-width:620px;margin-top:1.2rem">
+      <p>El PET garantiza <strong style="color:#fff;font-weight:600">mejores sueldos, mejores condiciones y una carrera profesional clara</strong> para los profesionales de la sanidad pública.<br/><br/>Porque si queremos la mejor sanidad, aquí es donde tienen que ir nuestros impuestos.</p>
+    </div>
+  </div>
+
+  <!-- 5: TRANSPORTE IMPACTO -->
+  <div class="slide">
+    <div class="bg-img" style="background-image:url('Adamuz_ACCIDENTE.jpg')"></div>
+    <div class="bg-ov"></div>
+    <div class="tag" style="border-color:rgba(198,11,30,.7);color:#ff5555;background:rgba(198,11,30,.12)">⚠️ Transporte &amp; Infraestructuras</div>
+    <div class="impnum" id="ct46">0</div>
+    <div class="impsub">VIDAS &mdash; ADAMUZ, CÓRDOBA &mdash; 19 ENE 2026</div>
+    <div class="impdet">Colisión Iryo-Alvia. Rotura de riel inspeccionado dos meses antes.<br/>Investigación abierta por posible <strong style="color:#ff6666">fraude en fondos europeos</strong> de mantenimiento.</div>
+  </div>
+
+  <!-- 6: TRANSPORTE SOLUCIÓN -->
+  <div class="slide">
+    <div class="tag gt">🔧 La Solución</div>
+    <div class="two">
+      <div class="tcol">
+        <div class="hl" style="text-align:left;font-size:clamp(1.6rem,3.5vw,2.9rem)">Reconstruir.<br/><span class="g">No remendar.</span></div>
+        <div class="bd" style="text-align:left;margin-top:.7rem">Reconstrucción de los tramos críticos: corredor mediterráneo, Madrid-Andalucía, Madrid-Barcelona.</div>
+        <div class="spdbanner">
+          <div class="sfrom">280<span class="sunit">km/h</span></div>
+          <div class="sarrow">→</div>
+          <div class="sto">350<span class="sunit">km/h</span></div>
+        </div>
+        <div class="bd" style="text-align:left;margin-top:.7rem;font-size:clamp(.7rem,1.15vw,.82rem)">"Es más caro pagar con vidas que construir bien desde el principio."</div>
+      </div>
+      <div class="timg">
+        <img src="SoldaduraRail.jpg" class="railimg" alt="Soldadura rail" onerror="this.parentElement.style.display='none'"/>
+        <div style="font-family:'Syne',sans-serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(198,11,30,.6);margin-top:.5rem;text-align:center">Soldadura inspeccionada · 2 meses antes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7: ECONOMÍA PENSIONES + INMIGRACIÓN -->
+  <div class="slide">
+    <div class="tag gt">💶 Economía — De dónde viene el dinero</div>
+    <div class="hl">Dos medidas.<br/><span class="r">Pensiones sostenibles.</span></div>
+    <div class="twocards">
+      <div class="ecc">
+        <div class="ecn">01</div>
+        <div class="ect">Reforma de Pensiones</div>
+        <div class="ecd">Cada vez más jubilados, menos trabajadores. Si no lo arreglamos ahora, cuando nuestra generación se jubile no habrá dinero.</div>
+        <span class="ech">Más años voluntarios = ventajas fiscales</span>
+      </div>
+      <div class="ecc">
+        <div class="ecn">02</div>
+        <div class="ect">Inmigración Laboral Inteligente</div>
+        <div class="ecd">Cubrir sectores con déficit de trabajadores. Más cotizaciones = pensiones más sostenibles.</div>
+        <span class="ech">Visado express para perfiles cualificados</span>
+        <span class="ech" style="font-weight:400;color:rgba(255,255,255,.45)">150€ · plazas limitadas · proceso ágil</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8: ECONOMÍA SEPE + RECORTES -->
+  <div class="slide">
+    <div class="tag gt">💻 Economía — Medida 03 + Compromiso</div>
+    <div class="hl" style="font-size:clamp(1.5rem,3.2vw,2.6rem)">Modernizar el Estado.<br/><span class="g">Predicar con el ejemplo.</span></div>
+    <div class="seperow">
+      <div class="sepeimgw">
+        <img src="SEPE.jpg" alt="SEPE" onerror="this.parentElement.style.display='none'"/>
+        <div style="font-family:'Syne',sans-serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(241,191,0,.45);margin-top:.45rem;text-align:center">SEPE Digital</div>
+      </div>
+      <div class="sepecontent">
+        <div class="ecc" style="margin-bottom:.8rem">
+          <div class="ecn">03</div>
+          <div class="ect">SEPE Digital</div>
+          <div class="ecd">Convertir el servicio público de empleo en una plataforma digital eficiente donde empresas y trabajadores se encuentren de verdad. Adiós a la burocracia de siempre.</div>
+        </div>
+        <div class="commitbox">
+          <div class="cline">📢 Compromiso del PET</div>
+          <div class="cline"><span class="cpct">−20%</span> sueldo del Presidente del Gobierno</div>
+          <div class="cline"><span class="cpct">−10%</span> sueldo de ministros y altos cargos</div>
+          <div style="font-size:.68rem;color:rgba(255,255,255,.38);margin-top:.4rem;font-weight:300">Siguen siendo sueldos altos. Pero ese dinero tiene usos mejores. Nosotros predicamos con el ejemplo.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9: CIERRE -->
+  <div class="slide">
+    <div class="viva">¡VIVA<br/><span class="vr">ESPAÑA!</span></div>
+    <div class="vivasub">El PET &mdash; Gestión que funciona</div>
+    <div class="div" style="margin:.9rem auto"></div>
+    <div class="cstats">
+      <div class="cs"><div class="csn">5</div><div class="csl">Áreas</div></div>
+      <div class="cs"><div class="csn">5</div><div class="csl">Propuestas reales</div></div>
+      <div class="cs"><div class="csn">1</div><div class="csl">Objetivo</div></div>
+    </div>
+    <div class="bd" style="margin-top:1.1rem;font-size:clamp(.74rem,1.25vw,.88rem)">"No venimos a dividir. Venimos a construir.<br/>España tiene todo lo que necesita para prosperar.<br/><strong style="color:#fff;font-weight:400">Solo hace falta gestionarlo bien.</strong>"</div>
+  </div>
+
+</div><!-- #deck -->
 
 <div id="nav">
-  <button class="nbtn" id="prev">&#8592;</button>
+  <button class="nb" id="prev">&#8592;</button>
   <div id="dots"></div>
-  <button class="nbtn" id="next">&#8594;</button>
+  <button class="nb" id="next">&#8594;</button>
 </div>
-<div id="slide-num">1 / 7</div>
-<div class="hint">&#8592; &#8594; para navegar</div>
+<div id="snum">1 / 10</div>
+<div class="hint">&#8592; &#8594; &nbsp; desliza para navegar</div>
 
 <script>
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════════════════
    SLIDE MANAGER
-══════════════════════════════════════════ */
+═══════════════════════════════════════════════════ */
 const slides = Array.from(document.querySelectorAll('.slide'));
 const TOTAL  = slides.length;
 let cur = 0;
 
-const dotsEl  = document.getElementById('dots');
-const numEl   = document.getElementById('slide-num');
+const dotsEl = document.getElementById('dots');
+const snumEl = document.getElementById('snum');
 slides.forEach((_,i)=>{
-  const d = document.createElement('div');
-  d.className = 'dot'+(i===0?' on':'');
-  d.onclick   = ()=>go(i);
+  const d=document.createElement('div');
+  d.className='dot'+(i===0?' on':'');
+  d.onclick=()=>go(i);
   dotsEl.appendChild(d);
 });
-const getDots = ()=>Array.from(dotsEl.children);
+const allDots=()=>Array.from(dotsEl.children);
 
 function go(idx){
   slides[cur].classList.remove('active');
-  getDots()[cur].classList.remove('on');
-  cur = (idx+TOTAL)%TOTAL;
+  allDots()[cur].classList.remove('on');
+  cur=(idx+TOTAL)%TOTAL;
   slides[cur].classList.add('active');
-  getDots()[cur].classList.add('on');
-  numEl.textContent = (cur+1)+' / '+TOTAL;
+  allDots()[cur].classList.add('on');
+  snumEl.textContent=(cur+1)+' / '+TOTAL;
   INITS[cur]();
-  if(cur===2) startStatCounter();
+  if(cur===2) startPct41();
+  if(cur===5) startCt46();
+  if(cur===9) triggerFlagSweep();
 }
-document.getElementById('prev').onclick = ()=>go(cur-1);
-document.getElementById('next').onclick = ()=>go(cur+1);
-document.addEventListener('keydown', e=>{
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'||e.key==='ArrowDown') go(cur+1);
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp')    go(cur-1);
+  if(e.key==='ArrowLeft' ||e.key==='ArrowUp')   go(cur-1);
 });
 
-/* ══════════════════════════════════════════
-   CANVAS
-══════════════════════════════════════════ */
-const cv  = document.getElementById('fx');
-const ctx = cv.getContext('2d');
-let W, H;
-function resize(){ W=cv.width=window.innerWidth; H=cv.height=window.innerHeight; }
-window.addEventListener('resize', resize); resize();
+/* Touch / swipe (Android) */
+let tx0=0;
+document.addEventListener('touchstart',e=>{tx0=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx0;
+  if(Math.abs(dx)>60) go(cur+(dx<0?1:-1));
+},{passive:true});
 
-const RED  = '#c60b1e';
-const GOLD = '#f1bf00';
-const ORED = '#ff3300';
-const YEL  = '#ffcc00';
+/* ═══════════════════════════════════════════════════
+   CANVAS — DPR-aware
+═══════════════════════════════════════════════════ */
+const cv =document.getElementById('fx');
+const ctx=cv.getContext('2d');
+let W,H,DPR;
 
-
-/* ══════════════════════════════════════════
-   S0 — SIDE EMITTER PARTICLES + SHOOTERS
-══════════════════════════════════════════ */
-let sp=[], sTick=0, shooters=[];
-
-function makeShooter(scatter){
-  return{
-    x: scatter?Math.random()*(W+600)-300:-400,
-    y: H*.04+Math.random()*H*.92,
-    spd: Math.random()*12+5,
-    tl:  Math.random()*220+70,
-    thick: Math.random()*1.8+.3,
-    alpha: Math.random()*.18+.05,
-    col: Math.random()<.55?ORED:YEL,
-    wave:(Math.random()-.5)*.3
-  };
+function resize(){
+  DPR=Math.min(window.devicePixelRatio||1,2);
+  W=window.innerWidth; H=window.innerHeight;
+  cv.width =Math.round(W*DPR);
+  cv.height=Math.round(H*DPR);
+  cv.style.width =W+'px';
+  cv.style.height=H+'px';
+  ctx.setTransform(DPR,0,0,DPR,0,0);
 }
-function stepShooter(s){ s.x+=s.spd; s.y+=s.wave; if(s.x>W+s.tl+80) Object.assign(s,makeShooter(false)); }
-function drawShooter(s){
-  const g=ctx.createLinearGradient(s.x-s.tl,s.y,s.x,s.y);
-  g.addColorStop(0,'transparent'); g.addColorStop(.6,s.col+'33'); g.addColorStop(1,s.col+'bb');
-  ctx.save(); ctx.globalAlpha=s.alpha;
-  ctx.shadowColor=s.col; ctx.shadowBlur=12;
-  ctx.strokeStyle=g; ctx.lineWidth=s.thick;
-  ctx.beginPath(); ctx.moveTo(s.x-s.tl,s.y); ctx.lineTo(s.x,s.y); ctx.stroke();
-  ctx.globalAlpha=s.alpha*2.6;
-  ctx.beginPath(); ctx.arc(s.x,s.y,s.thick*2.4,0,Math.PI*2);
-  ctx.fillStyle='#ffffffcc'; ctx.fill(); ctx.restore();
-}
-function makeSP(){
-  const left=Math.random()<.5;
-  const ang =left?(Math.random()-.5)*1.4:Math.PI+(Math.random()-.5)*1.4;
-  const spd =Math.random()*3+.9;
-  const roll=Math.random();
-  return{
-    x:left?0:W, y:H*.06+Math.random()*H*.88,
-    vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd-.5,
-    life:1, decay:1/(Math.random()*55+48),
-    r:Math.random()*2.6+.6,
-    col:roll<.4?'#ff2200':roll<.72?'#ff8800':'#ffd000'
-  };
-}
-function initS0(){ sp=[]; sTick=0; if(!shooters.length) shooters=Array.from({length:12},()=>makeShooter(true)); }
-function updateS0(){
-  if(++sTick%2===0) for(let i=0;i<5;i++) sp.push(makeSP());
-  if(sp.length>800) sp=sp.filter(p=>p.life>0);
-  shooters.forEach(stepShooter);
-  sp.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy-=.02; p.vx*=.984; p.life-=p.decay; });
-  sp=sp.filter(p=>p.life>0);
-}
-function drawS0(){
-  shooters.forEach(drawShooter);
-  sp.forEach(p=>{
-    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.95;
-    ctx.shadowColor=p.col; ctx.shadowBlur=14;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r*Math.max(.08,p.life),0,Math.PI*2);
-    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
-  });
-}
+window.addEventListener('resize',()=>{resize();INITS[cur]();});
+resize();
 
-
-/* ══════════════════════════════════════════
-   S1 — PULSING GOLD ORBS (MONARCHY)
-══════════════════════════════════════════ */
-let orbT=0;
-function initS1(){ orbT=0; }
-function updateS1(){ orbT++; }
-function drawS1(){
-  const t=orbT*.008;
-  const orbs=[
-    {x:W*.12,y:H*.22,r:280,col:GOLD,a:.07},
-    {x:W*.88,y:H*.78,r:220,col:GOLD,a:.055},
-    {x:W*.5, y:H*.5, r:160,col:'#ff9900',a:.04},
-  ];
-  orbs.forEach((o,i)=>{
-    const pulse=1+Math.sin(t+i*2.1)*.1;
-    const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r*pulse);
-    g.addColorStop(0,`rgba(241,191,0,${o.a})`); g.addColorStop(1,'transparent');
-    ctx.beginPath(); ctx.arc(o.x,o.y,o.r*pulse,0,Math.PI*2);
-    ctx.fillStyle=g; ctx.fill();
-  });
-  // floating gold motes
-  if(orbT%4===0) sp.push({
-    x:W*.08+Math.random()*W*.84, y:H*.9+Math.random()*H*.1,
-    vx:(Math.random()-.5)*.4, vy:-(Math.random()*1.2+.3),
-    life:1, decay:1/(Math.random()*120+80),
-    r:Math.random()*1.8+.5, col:Math.random()<.5?GOLD:'#ffe066'
-  });
-  sp.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.life-=p.decay; });
-  sp=sp.filter(p=>p.life>0);
-  sp.forEach(p=>{
-    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.7;
-    ctx.shadowColor=p.col; ctx.shadowBlur=10;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
-  });
-}
-
-
-/* ══════════════════════════════════════════
-   S2 — EDUCATION: stat counter + particles
-══════════════════════════════════════════ */
-let eduT=0;
-function initS2(){ eduT=0; sp=[]; }
-function updateS2(){
-  eduT++;
-  if(eduT%3===0) {
-    const ang=Math.random()*Math.PI*2;
-    const spd=Math.random()*2+.5;
-    sp.push({
-      x:W/2+(Math.random()-.5)*W*.6, y:H*.28,
-      vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd-1.5,
-      life:1, decay:1/(Math.random()*80+60),
-      r:Math.random()*2.2+.5,
-      col:Math.random()<.5?RED:GOLD
-    });
-  }
-  sp.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=.015; p.life-=p.decay; });
-  sp=sp.filter(p=>p.life>0);
-}
-function drawS2(){
-  // big glow behind the stat
-  const g=ctx.createRadialGradient(W/2,H*.28,0,W/2,H*.28,W*.3);
-  g.addColorStop(0,'rgba(198,11,30,.12)'); g.addColorStop(1,'transparent');
-  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
-  sp.forEach(p=>{
-    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.9;
-    ctx.shadowColor=p.col; ctx.shadowBlur=12;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r*Math.max(.1,p.life),0,Math.PI*2);
-    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
-  });
-}
-
-// Animated counter for the 41% stat
-let statCurVal=0, statAnimId=null;
-function startStatCounter(){
-  const el=document.getElementById('stat-pct');
-  statCurVal=0;
-  if(statAnimId) clearInterval(statAnimId);
-  statAnimId=setInterval(()=>{
-    statCurVal=Math.min(41,statCurVal+1);
-    el.textContent=statCurVal+'%';
-    if(statCurVal>=41) clearInterval(statAnimId);
-  },38);
-}
-
-
-/* ══════════════════════════════════════════
-   S3 — SANIDAD: ECG heartbeat line
-══════════════════════════════════════════ */
-let ecgT=0, ecgPts=[];
-function initS3(){ ecgT=0; ecgPts=[]; sp=[]; }
-function ecgY(x){
-  const norm = (x%200)/200; // 0-1 cycle
-  if(norm<.35) return 0;
-  if(norm<.42) return -(norm-.35)/.07*H*.18;
-  if(norm<.46) return -H*.18+(norm-.42)/.04*H*.36;
-  if(norm<.52) return H*.18-(norm-.46)/.06*H*.18;
-  if(norm<.56) return -(norm-.52)/.04*H*.08;
-  if(norm<.60) return -H*.08+(norm-.56)/.04*H*.08;
-  return 0;
-}
-function updateS3(){
-  ecgT+=2.5;
-  // spawn small red motes
-  if(Math.floor(ecgT)%8===0){
-    sp.push({
-      x:W*.05+Math.random()*W*.9, y:H*.5+Math.random()*H*.3,
-      vx:(Math.random()-.5)*.6, vy:-(Math.random()*.8+.2),
-      life:1,decay:1/(Math.random()*90+60),
-      r:Math.random()*1.5+.3,col:RED
-    });
-  }
-  sp.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life-=p.decay;});
-  sp=sp.filter(p=>p.life>0);
-}
-function drawS3(){
-  const cy=H*.82;
-  const pw=W*.85, sx=W*.075;
-  // faint red glow along baseline
-  const bg=ctx.createLinearGradient(0,cy-60,0,cy+20);
-  bg.addColorStop(0,'rgba(198,11,30,.06)'); bg.addColorStop(1,'transparent');
-  ctx.fillStyle=bg; ctx.fillRect(0,cy-60,W,80);
-
-  // draw the scrolling ECG
-  ctx.save();
-  ctx.strokeStyle=RED; ctx.lineWidth=2.5;
-  ctx.shadowColor=RED; ctx.shadowBlur=16;
-  ctx.beginPath();
-  let started=false;
-  for(let px=0;px<pw;px+=2){
-    const t=px-ecgT;
-    const y=cy+ecgY(t);
-    const a=Math.max(0,Math.min(1,(px/pw)*3)); // fade in from left
-    if(!started){ ctx.moveTo(sx+px,y); started=true; }
-    else ctx.lineTo(sx+px,y);
-  }
-  ctx.globalAlpha=.85; ctx.stroke(); ctx.restore();
-
-  // leading dot glow
-  const ledge=pw-4;
-  const ldy=cy+ecgY(ledge-ecgT);
-  ctx.save();
-  ctx.globalAlpha=.9; ctx.fillStyle='#fff';
-  ctx.shadowColor=RED; ctx.shadowBlur=20;
-  ctx.beginPath(); ctx.arc(sx+ledge,ldy,4,0,Math.PI*2); ctx.fill(); ctx.restore();
-
-  sp.forEach(p=>{
-    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.5;
-    ctx.shadowColor=p.col; ctx.shadowBlur=8;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
-  });
-}
-
-
-/* ══════════════════════════════════════════
-   S4 — TRANSPORTE: falling debris + solution glow
-══════════════════════════════════════════ */
-let debrisT=0;
-function initS4(){ debrisT=0; sp=[]; for(let i=0;i<40;i++) sp.push(makeDeb(true)); }
-function makeDeb(scatter){
-  return{
-    x:Math.random()*W,
-    y:scatter?Math.random()*H:-10,
-    vx:(Math.random()-.5)*1.5,
-    vy:Math.random()*1.2+.4,
-    life:1, decay:1/(Math.random()*220+120),
-    r:Math.random()*2+.4,
-    col:Math.random()<.6?'#ff2200':Math.random()<.5?'#ff6600':'#888888'
-  };
-}
-function updateS4(){
-  debrisT++;
-  if(debrisT%4===0) sp.push(makeDeb(false));
-  sp.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.012;p.life-=p.decay;});
-  sp=sp.filter(p=>p.life>0&&p.y<H+10);
-}
-function drawS4(){
-  // danger glow at top
-  const dg=ctx.createRadialGradient(W/2,0,0,W/2,0,W*.6);
-  dg.addColorStop(0,'rgba(198,11,30,.13)'); dg.addColorStop(1,'transparent');
-  ctx.fillStyle=dg; ctx.fillRect(0,0,W,H);
-  // solution glow at bottom
-  const sg=ctx.createRadialGradient(W/2,H,0,W/2,H,W*.5);
-  sg.addColorStop(0,'rgba(241,191,0,.07)'); sg.addColorStop(1,'transparent');
-  ctx.fillStyle=sg; ctx.fillRect(0,0,W,H);
-  sp.forEach(p=>{
-    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.8;
-    ctx.shadowColor=p.col; ctx.shadowBlur=8;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
-  });
-}
-
-
-/* ══════════════════════════════════════════
-   S5 — ECONOMÍA: floating number particles
-══════════════════════════════════════════ */
-let ecoT=0;
-function initS5(){ ecoT=0; sp=[]; }
-function updateS5(){
-  ecoT++;
-  if(ecoT%5===0){
-    const side=Math.random()<.5;
-    sp.push({
-      x:side?W*.02:W*.98, y:H*.1+Math.random()*H*.8,
-      vx:side?(Math.random()*1.5+.3):-(Math.random()*1.5+.3),
-      vy:(Math.random()-.5)*.8,
-      life:1, decay:1/(Math.random()*100+80),
-      r:Math.random()*1.6+.4,
-      col:Math.random()<.5?RED:GOLD
-    });
-  }
-  sp.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life-=p.decay;});
-  sp=sp.filter(p=>p.life>0);
-}
-function drawS5(){
-  sp.forEach(p=>{
-    ctx.save(); ctx.globalAlpha=Math.max(0,p.life)*.65;
-    ctx.shadowColor=p.col; ctx.shadowBlur=10;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=p.col; ctx.fill(); ctx.restore();
-  });
-}
-
-
-/* ══════════════════════════════════════════
-   S6 — CIERRE: Red & Yellow FIREWORKS
-══════════════════════════════════════════ */
-const FW_COLS=[RED,'#ff5500','#ff8800',GOLD,'#ffe066','#fff','#ffaa00'];
-let rockets,fwp,rTick6;
-
-function FWP(x,y,ang,spd,col){
-  return{x,y,px:x,py:y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,
-    g:.1,life:1,decay:1/(Math.random()*90+45),r:Math.random()*2.5+.7,col};
-}
-function stepFP(p){ p.px=p.x;p.py=p.y;p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.vx*=.97;p.vy*=.98;p.life-=p.decay; }
-function drawFP(p){
-  if(p.life<=0)return;
-  const a=Math.max(0,p.life);
-  ctx.save();
-  ctx.globalAlpha=a*.75;ctx.strokeStyle=p.col;ctx.lineWidth=p.r*.6;
-  ctx.beginPath();ctx.moveTo(p.px,p.py);ctx.lineTo(p.x,p.y);ctx.stroke();
-  ctx.globalAlpha=a;ctx.fillStyle=p.col;ctx.shadowColor=p.col;ctx.shadowBlur=10;
-  ctx.beginPath();ctx.arc(p.x,p.y,p.r*Math.max(.1,a),0,Math.PI*2);ctx.fill();
-  ctx.restore();
-}
-function makeRocket6(){
-  return{
-    x:W*.12+Math.random()*W*.76, y:H+12,
-    vy:-(Math.random()*10+10), vx:(Math.random()-.5)*3,
-    peakY:H*.06+Math.random()*H*.35,
-    col:FW_COLS[Math.floor(Math.random()*FW_COLS.length)],
-    trail:[],burst:false,bf:0
-  };
-}
-function stepR(r){
-  if(r.burst){r.bf++;return;}
-  r.trail.push({x:r.x,y:r.y});
-  if(r.trail.length>14) r.trail.shift();
-  r.x+=r.vx;r.y+=r.vy;r.vy+=.32;
-  if(r.y<=r.peakY){
-    r.burst=true;
-    const N=80+Math.floor(Math.random()*40);
-    for(let i=0;i<N;i++){
-      const ang=(i/N)*Math.PI*2+Math.random()*.2;
-      fwp.push(FWP(r.x,r.y,ang,Math.random()*10+3,r.col));
-    }
-    for(let i=0;i<30;i++) fwp.push(FWP(r.x,r.y,Math.random()*Math.PI*2,Math.random()*3+.5,'#fff'));
-  }
-}
-function drawR(r){
-  if(r.burst)return;
-  r.trail.forEach((pt,ti)=>{
-    ctx.save();ctx.globalAlpha=(ti/r.trail.length)*.6;
-    ctx.shadowColor=r.col;ctx.shadowBlur=7;
-    ctx.beginPath();ctx.arc(pt.x,pt.y,1.5*(ti/r.trail.length)+.3,0,Math.PI*2);
-    ctx.fillStyle=r.col;ctx.fill();ctx.restore();
-  });
-  ctx.save();ctx.fillStyle='#fff';ctx.shadowColor=r.col;ctx.shadowBlur=18;
-  ctx.beginPath();ctx.arc(r.x,r.y,3.5,0,Math.PI*2);ctx.fill();ctx.restore();
-}
-function initS6(){ rockets=[makeRocket6()];fwp=[];rTick6=0; }
-function updateS6(){
-  if(++rTick6%80===40) rockets.push(makeRocket6());
-  rockets.forEach(stepR); rockets=rockets.filter(r=>!(r.burst&&r.bf>6));
-  fwp.forEach(stepFP);    fwp=fwp.filter(p=>p.life>0);
-}
-function drawS6(){ rockets.forEach(drawR); fwp.forEach(drawFP); }
-
-
-/* ══════════════════════════════════════════
-   MAIN LOOP
-══════════════════════════════════════════ */
-const INITS  =[initS0,initS1,initS2,initS3,initS4,initS5,initS6];
-const UPDATES=[updateS0,updateS1,updateS2,updateS3,updateS4,updateS5,updateS6];
-const DRAWS  =[drawS0,drawS1,drawS2,drawS3,drawS4,drawS5,drawS6];
-
-INITS[0]();
-
-function loop(){
+/* ═══════════════════════════════════════════════════
+   30-FPS CAP
+═══════════════════════════════════════════════════ */
+const FRAME_MS=1000/30;
+let lastT=0;
+function loop(ts){
+  requestAnimationFrame(loop);
+  if(ts-lastT<FRAME_MS)return;
+  lastT=ts;
   ctx.clearRect(0,0,W,H);
   UPDATES[cur]();
   DRAWS[cur]();
-  requestAnimationFrame(loop);
 }
-loop();
+
+/* ═══════════════════════════════════════════════════
+   HELPERS — NO shadowBlur anywhere (perf kill)
+   Fake glow = large dim circle + small bright circle
+═══════════════════════════════════════════════════ */
+function dot(x,y,r,col,a){
+  if(a<=0)return;
+  ctx.globalAlpha=a*.22;
+  ctx.fillStyle=col;
+  ctx.beginPath();ctx.arc(x,y,r*3.5,0,6.2832);ctx.fill();
+  ctx.globalAlpha=a;
+  ctx.beginPath();ctx.arc(x,y,r,0,6.2832);ctx.fill();
+}
+
+const RED='#c60b1e', GOLD='#f1bf00', ORA='#ff5500', YEL='#ffcc00';
+
+/* ═══════════════════════════════════════════════════
+   S0 — TITLE: side particles + bg shooters
+═══════════════════════════════════════════════════ */
+let s0p=[],s0sh=[],s0t=0;
+
+function mkShooter(sc){
+  return{x:sc?Math.random()*(W+500)-200:-340,y:H*.04+Math.random()*H*.92,
+    spd:Math.random()*11+4,tl:Math.random()*200+60,
+    thick:Math.random()*1.5+.25,a:Math.random()*.14+.04,
+    col:Math.random()<.55?ORA:YEL,wy:(Math.random()-.5)*.26};
+}
+function mkSP0(){
+  const left=Math.random()<.5;
+  const ang=left?(Math.random()-.5)*1.35:Math.PI+(Math.random()-.5)*1.35;
+  const spd=Math.random()*2.2+.7,r=Math.random();
+  return{x:left?0:W,y:H*.05+Math.random()*H*.9,
+    vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd-.42,
+    life:1,decay:1/(Math.random()*55+45),
+    r:Math.random()*2.2+.55,
+    col:r<.4?'#ff2200':r<.72?'#ff8800':'#ffd000'};
+}
+function initS0(){s0p=[];s0t=0;if(!s0sh.length)s0sh=Array.from({length:10},()=>mkShooter(true));}
+function updateS0(){
+  if(++s0t%2===0)for(let i=0;i<3;i++)s0p.push(mkSP0());
+  if(s0p.length>260)s0p.splice(0,s0p.length-260);
+  s0sh.forEach(s=>{s.x+=s.spd;s.y+=s.wy;if(s.x>W+s.tl+60)Object.assign(s,mkShooter(false));});
+  for(let i=s0p.length-1;i>=0;i--){
+    const p=s0p[i];p.x+=p.vx;p.y+=p.vy;p.vy-=.018;p.vx*=.985;p.life-=p.decay;
+    if(p.life<=0)s0p.splice(i,1);
+  }
+}
+function drawS0(){
+  s0sh.forEach(s=>{
+    const g=ctx.createLinearGradient(s.x-s.tl,s.y,s.x,s.y);
+    g.addColorStop(0,'transparent');g.addColorStop(.65,s.col+'28');g.addColorStop(1,s.col+'aa');
+    ctx.globalAlpha=s.a;ctx.strokeStyle=g;ctx.lineWidth=s.thick;
+    ctx.beginPath();ctx.moveTo(s.x-s.tl,s.y);ctx.lineTo(s.x,s.y);ctx.stroke();
+    ctx.globalAlpha=s.a*2.2;ctx.fillStyle='#ffffffbb';
+    ctx.beginPath();ctx.arc(s.x,s.y,s.thick*2,0,6.2832);ctx.fill();
+  });
+  s0p.forEach(p=>dot(p.x,p.y,p.r*Math.max(.08,p.life),p.col,Math.max(0,p.life)*.9));
+  ctx.globalAlpha=1;
+}
+
+/* ═══════════════════════════════════════════════════
+   S1 — MONARCHY: gold motes rising
+═══════════════════════════════════════════════════ */
+let s1p=[],s1t=0;
+function initS1(){s1p=[];s1t=0;}
+function updateS1(){
+  s1t++;
+  if(s1t%6===0)s1p.push({x:W*.04+Math.random()*W*.92,y:H*.96,
+    vx:(Math.random()-.5)*.32,vy:-(Math.random()*.9+.22),
+    life:1,decay:1/(Math.random()*105+70),
+    r:Math.random()*1.5+.35,col:Math.random()<.5?GOLD:'#ffe066'});
+  if(s1p.length>80)s1p.splice(0,s1p.length-80);
+  for(let i=s1p.length-1;i>=0;i--){
+    const p=s1p[i];p.x+=p.vx;p.y+=p.vy;p.life-=p.decay;
+    if(p.life<=0)s1p.splice(i,1);
+  }
+}
+function drawS1(){
+  const t=s1t*.007;
+  [[W*.08,H*.18,240,.065],[W*.9,H*.82,180,.05]].forEach(([ox,oy,or,oa],i)=>{
+    const pulse=1+Math.sin(t+i*2.2)*.09;
+    const g=ctx.createRadialGradient(ox,oy,0,ox,oy,or*pulse);
+    g.addColorStop(0,`rgba(241,191,0,${oa})`);g.addColorStop(1,'transparent');
+    ctx.globalAlpha=1;ctx.fillStyle=g;
+    ctx.beginPath();ctx.arc(ox,oy,or*pulse,0,6.2832);ctx.fill();
+  });
+  s1p.forEach(p=>dot(p.x,p.y,p.r,p.col,Math.max(0,p.life)*.6));
+  ctx.globalAlpha=1;
+}
+
+/* ═══════════════════════════════════════════════════
+   S2 — EDUCATION PROBLEM: red particle burst
+═══════════════════════════════════════════════════ */
+let s2p=[],s2t=0,pct41anim=null;
+function initS2(){s2p=[];s2t=0;}
+function updateS2(){
+  s2t++;
+  if(s2t%5===0){
+    const ang=Math.random()*6.2832,spd=Math.random()*1.6+.4;
+    s2p.push({x:W*.28+Math.random()*W*.44,y:H*.3,
+      vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd-1.1,
+      life:1,decay:1/(Math.random()*65+45),
+      r:Math.random()*1.7+.35,col:Math.random()<.55?RED:GOLD});
+  }
+  if(s2p.length>70)s2p.splice(0,s2p.length-70);
+  for(let i=s2p.length-1;i>=0;i--){
+    const p=s2p[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.013;p.life-=p.decay;
+    if(p.life<=0)s2p.splice(i,1);
+  }
+}
+function drawS2(){
+  // faint red glow behind number
+  const g=ctx.createRadialGradient(W*.5,H*.3,0,W*.5,H*.3,W*.28);
+  g.addColorStop(0,'rgba(198,11,30,.1)');g.addColorStop(1,'transparent');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  s2p.forEach(p=>dot(p.x,p.y,p.r,p.col,Math.max(0,p.life)*.8));
+  ctx.globalAlpha=1;
+}
+function startPct41(){
+  const el=document.getElementById('pct41');
+  let v=0;if(pct41anim)clearInterval(pct41anim);
+  pct41anim=setInterval(()=>{v=Math.min(41,v+1);el.textContent=v+'%';if(v>=41)clearInterval(pct41anim);},38);
+}
+
+/* ═══════════════════════════════════════════════════
+   S3 — EDUCATION SOLUTION: gold sparkles rising
+═══════════════════════════════════════════════════ */
+let s3p=[],s3t=0;
+function initS3(){s3p=[];s3t=0;}
+function updateS3(){
+  s3t++;
+  if(s3t%3===0){
+    s3p.push({x:W*.06+Math.random()*W*.88,y:H*.92+Math.random()*H*.06,
+      vx:(Math.random()-.5)*.5,vy:-(Math.random()*1.1+.3),
+      life:1,decay:1/(Math.random()*90+55),
+      r:Math.random()*1.5+.3,col:Math.random()<.6?GOLD:'#fff'});
+  }
+  if(s3p.length>120)s3p.splice(0,s3p.length-120);
+  for(let i=s3p.length-1;i>=0;i--){
+    const p=s3p[i];p.x+=p.vx;p.y+=p.vy;p.life-=p.decay;
+    if(p.life<=0)s3p.splice(i,1);
+  }
+}
+function drawS3(){
+  s3p.forEach(p=>dot(p.x,p.y,p.r,p.col,Math.max(0,p.life)*.55));
+  ctx.globalAlpha=1;
+}
+
+/* ═══════════════════════════════════════════════════
+   S4 — SANIDAD: ECG heartbeat
+═══════════════════════════════════════════════════ */
+let ecgT=0;
+function initS4(){ecgT=0;}
+function updateS4(){ecgT+=1.8;}
+function ecgY(x){
+  const n=(((x%200)+200)%200)/200;
+  if(n<.34||n>.63)return 0;
+  if(n<.41)return -(n-.34)/.07*H*.14;
+  if(n<.45)return -H*.14+(n-.41)/.04*H*.28;
+  if(n<.51)return H*.14-(n-.45)/.06*H*.14;
+  if(n<.55)return -(n-.51)/.04*H*.055;
+  if(n<.59)return -H*.055+(n-.55)/.04*H*.055;
+  return 0;
+}
+function drawS4(){
+  const cy=H*.83,ml=W*.07,pw=W*.86;
+  // baseline
+  ctx.globalAlpha=.1;ctx.strokeStyle='#fff';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(ml,cy);ctx.lineTo(ml+pw,cy);ctx.stroke();
+  // ECG line
+  ctx.globalAlpha=.88;ctx.strokeStyle=RED;ctx.lineWidth=2.5;
+  ctx.beginPath();let first=true;
+  for(let px=0;px<=pw;px+=3){
+    const y=cy+ecgY(px-ecgT);
+    if(first){ctx.moveTo(ml+px,y);first=false;}else ctx.lineTo(ml+px,y);
+  }
+  ctx.stroke();
+  // leading dot (fake glow)
+  const lx=ml+pw,ly=cy+ecgY(pw-ecgT);
+  ctx.globalAlpha=.2;ctx.fillStyle=RED;
+  ctx.beginPath();ctx.arc(lx,ly,10,0,6.2832);ctx.fill();
+  ctx.globalAlpha=1;ctx.fillStyle='#fff';
+  ctx.beginPath();ctx.arc(lx,ly,3.5,0,6.2832);ctx.fill();
+  ctx.globalAlpha=1;
+}
+
+/* ═══════════════════════════════════════════════════
+   S5 — TRANSPORT IMPACT: debris + danger glow
+═══════════════════════════════════════════════════ */
+let s5p=[],s5t=0,ct46anim=null;
+function mkDeb(sc){
+  return{x:Math.random()*W,y:sc?Math.random()*H:-8,
+    vx:(Math.random()-.5)*1.1,vy:Math.random()*.8+.3,
+    life:1,decay:1/(Math.random()*180+90),
+    r:Math.random()*1.6+.35,
+    col:Math.random()<.5?'#ff2200':Math.random()<.5?'#ff5500':'#666'};
+}
+function initS5(){s5p=[];s5t=0;for(let i=0;i<20;i++)s5p.push(mkDeb(true));}
+function updateS5(){
+  s5t++;if(s5t%5===0)s5p.push(mkDeb(false));
+  if(s5p.length>110)s5p.splice(0,s5p.length-110);
+  for(let i=s5p.length-1;i>=0;i--){
+    const p=s5p[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.009;p.life-=p.decay;
+    if(p.life<=0||p.y>H+8)s5p.splice(i,1);
+  }
+}
+function drawS5(){
+  // danger glow
+  ctx.globalAlpha=.1;ctx.fillStyle=RED;ctx.fillRect(0,0,W,H*.22);
+  ctx.globalAlpha=1;
+  s5p.forEach(p=>dot(p.x,p.y,p.r,p.col,Math.max(0,p.life)*.7));
+  ctx.globalAlpha=1;
+}
+function startCt46(){
+  const el=document.getElementById('ct46');
+  let v=0;if(ct46anim)clearInterval(ct46anim);
+  ct46anim=setInterval(()=>{v=Math.min(46,v+1);el.textContent=v;if(v>=46)clearInterval(ct46anim);},28);
+}
+
+/* ═══════════════════════════════════════════════════
+   S6 — TRANSPORT SOLUTION: speed lines rushing outward
+═══════════════════════════════════════════════════ */
+let s6lines=[],s6t=0;
+function mkLine(){
+  const ang=Math.random()*6.2832;
+  return{ang,r:Math.random()*40+5,
+    spd:Math.random()*9+5,
+    maxR:Math.min(W,H)*.7,
+    a:Math.random()*.4+.15,
+    col:Math.random()<.6?GOLD:'#fff',
+    w:Math.random()*1.2+.2};
+}
+function initS6(){s6lines=Array.from({length:70},mkLine);s6t=0;}
+function updateS6(){
+  s6t++;
+  s6lines.forEach(l=>{
+    l.r+=l.spd*(1+l.r/120);
+    if(l.r>l.maxR){l.r=Math.random()*30+3;l.ang=Math.random()*6.2832;}
+  });
+}
+function drawS6(){
+  const cx=W*.38,cy=H*.52; // offset left because image is on right
+  s6lines.forEach(l=>{
+    const tl=l.r*.14+4;
+    const x1=cx+Math.cos(l.ang)*(l.r-tl),y1=cy+Math.sin(l.ang)*(l.r-tl);
+    const x2=cx+Math.cos(l.ang)*l.r,    y2=cy+Math.sin(l.ang)*l.r;
+    ctx.globalAlpha=l.a*Math.min(1,l.r/60);
+    ctx.strokeStyle=l.col;ctx.lineWidth=l.w;
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  });
+  ctx.globalAlpha=1;
+}
+
+/* ═══════════════════════════════════════════════════
+   S7 — ECONOMY PENSIONS: gold dots floating up
+═══════════════════════════════════════════════════ */
+let s7p=[],s7t=0;
+function initS7(){s7p=[];s7t=0;}
+function updateS7(){
+  s7t++;
+  if(s7t%5===0)s7p.push({x:W*.05+Math.random()*W*.9,y:H*.96,
+    vx:(Math.random()-.5)*.45,vy:-(Math.random()*.7+.2),
+    life:1,decay:1/(Math.random()*100+65),
+    r:Math.random()*1.4+.3,col:Math.random()<.6?GOLD:'#ffe080'});
+  if(s7p.length>90)s7p.splice(0,s7p.length-90);
+  for(let i=s7p.length-1;i>=0;i--){
+    const p=s7p[i];p.x+=p.vx;p.y+=p.vy;p.life-=p.decay;
+    if(p.life<=0)s7p.splice(i,1);
+  }
+}
+function drawS7(){
+  s7p.forEach(p=>dot(p.x,p.y,p.r,p.col,Math.max(0,p.life)*.55));
+  ctx.globalAlpha=1;
+}
+
+/* ═══════════════════════════════════════════════════
+   S8 — ECONOMY SEPE: digital data particles
+═══════════════════════════════════════════════════ */
+let s8p=[],s8t=0;
+function initS8(){s8p=[];s8t=0;}
+function updateS8(){
+  s8t++;
+  if(s8t%4===0){
+    const left=Math.random()<.5;
+    s8p.push({x:left?W*.02:W*.98,y:H*.08+Math.random()*H*.84,
+      vx:left?Math.random()*.7+.2:-(Math.random()*.7+.2),
+      vy:(Math.random()-.5)*.4,
+      life:1,decay:1/(Math.random()*80+55),
+      r:Math.random()*1.2+.25,col:Math.random()<.5?GOLD:'rgba(130,200,255,.8)'});
+  }
+  if(s8p.length>90)s8p.splice(0,s8p.length-90);
+  for(let i=s8p.length-1;i>=0;i--){
+    const p=s8p[i];p.x+=p.vx;p.y+=p.vy;p.life-=p.decay;
+    if(p.life<=0)s8p.splice(i,1);
+  }
+}
+function drawS8(){
+  s8p.forEach(p=>dot(p.x,p.y,p.r,p.col,Math.max(0,p.life)*.55));
+  ctx.globalAlpha=1;
+}
+
+/* ═══════════════════════════════════════════════════
+   S9 — CIERRE: RED & GOLD FIREWORKS
+   Dead-simple implementation — guaranteed to work
+═══════════════════════════════════════════════════ */
+const FW_COLS=[RED,'#ff5500','#ff8800',GOLD,'#ffe066','#fff','#ff3366'];
+let fw_rockets=[],fw_sparks=[],fw_tick=0;
+
+function fw_launch(){
+  fw_rockets.push({
+    x:W*.12+Math.random()*W*.76,
+    y:H+6,
+    vx:(Math.random()-.5)*2.2,
+    vy:-(10+Math.random()*8),
+    col:FW_COLS[Math.floor(Math.random()*FW_COLS.length)],
+    peakY:H*.06+Math.random()*H*.42
+  });
+}
+
+function initS9(){fw_rockets=[];fw_sparks=[];fw_tick=0;fw_launch();}
+
+function updateS9(){
+  fw_tick++;
+  if(fw_tick%95===48) fw_launch();
+
+  // update rockets
+  for(let i=fw_rockets.length-1;i>=0;i--){
+    const r=fw_rockets[i];
+    r.x+=r.vx; r.y+=r.vy; r.vy+=0.28;
+    if(r.y<=r.peakY){
+      // EXPLODE
+      const N=65+Math.floor(Math.random()*25);
+      for(let j=0;j<N;j++){
+        const ang=(j/N)*6.2832+Math.random()*.25;
+        const spd=3+Math.random()*7;
+        fw_sparks.push({x:r.x,y:r.y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,
+          col:r.col,life:1,decay:.012+Math.random()*.011});
+      }
+      for(let j=0;j<18;j++){
+        fw_sparks.push({x:r.x,y:r.y,
+          vx:(Math.random()-.5)*8,vy:(Math.random()-.5)*8,
+          col:'#ffffff',life:1,decay:.022+Math.random()*.015});
+      }
+      fw_rockets.splice(i,1);
+    }
+  }
+
+  // update sparks
+  for(let i=fw_sparks.length-1;i>=0;i--){
+    const s=fw_sparks[i];
+    s.x+=s.vx; s.y+=s.vy;
+    s.vy+=0.08; s.vx*=0.97;
+    s.life-=s.decay;
+    if(s.life<=0)fw_sparks.splice(i,1);
+  }
+  if(fw_sparks.length>700)fw_sparks.splice(0,fw_sparks.length-700);
+}
+
+function drawS9(){
+  // rockets — white dot
+  fw_rockets.forEach(r=>{
+    ctx.globalAlpha=0.88;ctx.fillStyle='#fff';
+    ctx.beginPath();ctx.arc(r.x,r.y,3,0,6.2832);ctx.fill();
+  });
+  // sparks
+  fw_sparks.forEach(s=>{
+    if(s.life<=0)return;
+    ctx.globalAlpha=Math.max(0,s.life)*.88;
+    ctx.fillStyle=s.col;
+    ctx.beginPath();ctx.arc(s.x,s.y,Math.max(.4,2.2*s.life),0,6.2832);ctx.fill();
+  });
+  ctx.globalAlpha=1;
+}
+
+/* ═══════════════════════════════════════════════════
+   SPAIN FLAG SWEEP SURPRISE
+═══════════════════════════════════════════════════ */
+function triggerFlagSweep(){
+  const el=document.getElementById('flagsweep');
+  el.classList.remove('go');
+  void el.offsetWidth; // reflow to reset animation
+  el.classList.add('go');
+}
+
+/* ═══════════════════════════════════════════════════
+   WIRING
+═══════════════════════════════════════════════════ */
+const INITS  =[initS0,initS1,initS2,initS3,initS4,initS5,initS6,initS7,initS8,initS9];
+const UPDATES=[updateS0,updateS1,updateS2,updateS3,updateS4,updateS5,updateS6,updateS7,updateS8,updateS9];
+const DRAWS  =[drawS0,drawS1,drawS2,drawS3,drawS4,drawS5,drawS6,drawS7,drawS8,drawS9];
+
+INITS[0]();
+requestAnimationFrame(loop);
 </script>
 </body>
 </html>
